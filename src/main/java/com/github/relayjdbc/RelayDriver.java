@@ -9,7 +9,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -225,7 +224,7 @@ public final class RelayDriver implements Driver {
         return new String[] { url, "" };
     }
 
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new SQLFeatureNotSupportedException("getParentLogger");
+    public Logger getParentLogger() {
+        return Logger.getLogger("com.github.relayjdbc");
     }
 }
