@@ -1,12 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.simplicit</groupId>
-  <artifactId>vjdbc</artifactId>
+  <groupId>com.github</groupId>
+  <artifactId>relay-jdbc</artifactId>
   <packaging>jar</packaging>
   <version>2.13</version>
-  <name>VJDBC JDBC driver (http transport only)</name>
-  <url>http://vjdbc.sourceforge.net/</url>
+  <name>relay-jdbc JDBC driver (http transport only)</name>
+  <url>https://github.com/peter-gergely-horvath/relay-jdbc</url>
+  <description>
+    relay-jdbc allows a JDBC connection to be relayed through an intermediate
+    relay server.
+
+    It is a fork of https://github.com/AugeoSoftware/VJDBC project,
+    which is a fork of VJDBC hosted on the http://vjdbc.sourceforge.net
+    Original Developers were: Hunter Payne (sfcat@users.sourceforge.net)
+    and Michael Link (urmeli@users.sourceforge.net).
+  </description>
 
   <repositories>
     <repository>
@@ -93,9 +102,9 @@
               <goal>jar</goal>
             </goals>
             <configuration>
-              <finalName>vjdbc-${project.version}</finalName>
+              <finalName>relay-jdbc-${project.version}</finalName>
               <includes>
-                <include>de/simplicit/vjdbc/**</include>
+                <include>de/simplicit/relay-jdbc/**</include>
                 <include>com/esotericsoftware/minlog/**</include>
                 <include>META-INF/services/java.sql.Driver</include>
               </includes>
@@ -190,25 +199,14 @@
 
   <developers>
     <developer>
-      <id>sfcat</id>
-      <name>Hunter Payne</name>
-      <email>sfcat@users.sourceforge.net</email>
+      <id>peter-gergely-horvath</id>
+      <name>Peter G. Horvath</name>
+      <email>peter.gergely.horvath@gmail.com</email>
       <roles>
-        <role>Developer</role>
+        <role>developer</role>
       </roles>
-      <organization>SQLStream Inc</organization>
-      <timezone>PST</timezone>
-    </developer>         
-    <developer>
-      <id>urmeli</id>
-      <name>Michael Link</name>
-      <email>urmeli@users.sourceforge.net</email>
-      <roles>
-        <role>Developer</role>
-      </roles>
-      <organization></organization>
-      <timezone></timezone>
-    </developer>         
+      <timezone>Europe/Vienna</timezone>
+    </developer>
   </developers>
 
 <!--
@@ -224,9 +222,14 @@
 -->
 
   <scm>
-    <connection>scm:svn:https://vjdbc.svn.sourceforge.net/svnroot/vjdbc/</connection>
-    <developerConnection>scm:svn:https://vjdbc.svn.sourceforge.net/svnroot/vjdbc/</developerConnection>
-    <url>http://vjdbc.svn.sourceforge.net/viewvc/vjdbc/</url>
+    <connection>
+      scm:git:https://github.com/peter-gergely-horvath/relay-jdbc.git
+    </connection>
+    <developerConnection>
+      scm:git:https://github.com/peter-gergely-horvath/relay-jdbc.git
+    </developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/peter-gergely-horvath/relay-jdbc</url>
   </scm>
 
   <reporting>
