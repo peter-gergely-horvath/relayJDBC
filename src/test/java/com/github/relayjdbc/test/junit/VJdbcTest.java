@@ -14,7 +14,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import com.github.relayjdbc.VJdbcProperties;
-import com.github.relayjdbc.VirtualDriver;
+import com.github.relayjdbc.RelayDriver;
 import com.github.relayjdbc.serial.StreamSerializer;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -31,7 +31,7 @@ public abstract class VJdbcTest extends TestCase {
     }
 
     protected void oneTimeSetup() throws Exception {
-        DriverManager.registerDriver(new VirtualDriver());
+        DriverManager.registerDriver(new RelayDriver());
     }
 
     protected void oneTimeTearDown() throws Exception {

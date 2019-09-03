@@ -25,7 +25,7 @@ public class VJdbcApplet extends Applet {
 
     public void init() {
         try {
-            Class.forName("com.github.relayjdbc.VirtualDriver").newInstance();
+            Class.forName("com.github.relayjdbc.RelayDriver").newInstance();
 
             setLayout(new GridBagLayout());
             setBackground(Color.GRAY);

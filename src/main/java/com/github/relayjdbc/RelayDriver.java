@@ -1,6 +1,6 @@
-// VJDBC - Virtual JDBC
+// Relay - Virtual JDBC
 // Written by Michael Link
-// Website: http://vjdbc.sourceforge.net
+// Website: http://Relay.sourceforge.net
 
 package com.github.relayjdbc;
 
@@ -29,10 +29,10 @@ import com.github.relayjdbc.command.DecoratedCommandSink;
 import com.github.relayjdbc.command.NullCallingContextFactory;
 import com.github.relayjdbc.command.StandardCallingContextFactory;
 
-public final class VirtualDriver implements Driver {
-    private static Log _logger = LogFactory.getLog(VirtualDriver.class);
+public final class RelayDriver implements Driver {
+    private static Log _logger = LogFactory.getLog(RelayDriver.class);
 
-    private static final String VJDBC_IDENTIFIER = "jdbc:vjdbc:";
+    private static final String Relay_IDENTIFIER = "jdbc:relayjdbc:";
     private static final String EJB_IDENTIFIER = "ejb:";
     private static final String RMI_IDENTIFIER = "rmi:";
     private static final String SERVLET_IDENTIFIER = "servlet:";
@@ -44,8 +44,8 @@ public final class VirtualDriver implements Driver {
 
     static {
         try {
-            DriverManager.registerDriver(new VirtualDriver());
-            _logger.info("Virtual JDBC-Driver successfully registered");
+            DriverManager.registerDriver(new RelayDriver());
+            _logger.info("RelayDriver JDBC-Driver successfully registered");
             try {
                 Class.forName("org.hsqldb.jdbcDriver").newInstance();
                 _logger.info("HSQL-Driver loaded, caching activated");
@@ -58,21 +58,21 @@ public final class VirtualDriver implements Driver {
                 _cacheEnabled = false;
             }
         } catch(Exception e) {
-            _logger.fatal("Couldn't register Virtual-JDBC-Driver !", e);
-            throw new RuntimeException("Couldn't register Virtual-JDBC-Driver !", e);
+            _logger.fatal("Couldn't register RelayDriver JDBC-Driver !", e);
+            throw new RuntimeException("Couldn't register RelayDriver JDBC-Driver !", e);
         }
     }
 
-    public VirtualDriver() {
+    public RelayDriver() {
     }
 
     public Connection connect(String urlstr, Properties props) throws SQLException {
         Connection result = null;
 
         if(acceptsURL(urlstr)) {
-            String realUrl = urlstr.substring(VJDBC_IDENTIFIER.length());
+            String realUrl = urlstr.substring(Relay_IDENTIFIER.length());
 
-            _logger.info("VJdbc-URL: " + realUrl);
+            _logger.info("Relay-URL: " + realUrl);
 
             try {
                 CommandSink sink = null;
@@ -82,15 +82,15 @@ public final class VirtualDriver implements Driver {
 //                // EJB-Connection
 //                if(realUrl.startsWith(EJB_IDENTIFIER)) {
 //                    urlparts = split(realUrl.substring(EJB_IDENTIFIER.length()));
-//                    _logger.info("VJdbc in EJB-Mode, using object " + urlparts[0]);
+//                    _logger.info("Relay in EJB-Mode, using object " + urlparts[0]);
 //                    sink = createEjbCommandSink(urlparts[0]);
 //                    // RMI-Connection
 //                } else if(realUrl.startsWith(RMI_IDENTIFIER)) {
 //                    urlparts = split(realUrl.substring(RMI_IDENTIFIER.length()));
-//                    _logger.info("VJdbc in RMI-Mode, using object " + urlparts[0]);
+//                    _logger.info("Relay in RMI-Mode, using object " + urlparts[0]);
 //                    // Examine SSL property
 //                    boolean useSSL = false;
-//                    String propSSL = props.getProperty(VJdbcProperties.RMI_SSL);
+//                    String propSSL = props.getProperty(RelayProperties.RMI_SSL);
 //                    useSSL = (propSSL != null && propSSL.equalsIgnoreCase("true"));
 //                    if(useSSL) {
 //                        _logger.info("Using Secure Socket Layer (SSL)");
@@ -100,7 +100,7 @@ public final class VirtualDriver implements Driver {
 //                } else 
                 if(realUrl.startsWith(SERVLET_IDENTIFIER)) {
                     urlparts = split(realUrl.substring(SERVLET_IDENTIFIER.length()));
-                    _logger.info("VJdbc in Servlet-Mode, using URL " + urlparts[0]);
+                    _logger.info("Relay in Servlet-Mode, using URL " + urlparts[0]);
                     sink = createServletCommandSink(urlparts[0], props);
                 } else {
                     throw new SQLException("Unknown protocol identifier " + realUrl);
@@ -142,7 +142,7 @@ public final class VirtualDriver implements Driver {
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        return url.startsWith(VJDBC_IDENTIFIER);
+        return url.startsWith(Relay_IDENTIFIER);
     }
 
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
@@ -197,8 +197,8 @@ public final class VirtualDriver implements Driver {
         // for now support only Kryo serialization via JDK HTTP client
         return new KryoServletCommandSinkJdkHttpClient(url, requestEnhancer);
         // TODO Decide here if we should use Jakarta-HTTP-Client or Kryo Http Client
-//        String useKryoHttpClient = props.getProperty(VJdbcProperties.SERVLET_USE_KRYO_HTTP_CLIENT);
-//        String useJakartaHttpClient = props.getProperty(VJdbcProperties.SERVLET_USE_JAKARTA_HTTP_CLIENT);
+//        String useKryoHttpClient = props.getProperty(RelayProperties.SERVLET_USE_KRYO_HTTP_CLIENT);
+//        String useJakartaHttpClient = props.getProperty(RelayProperties.SERVLET_USE_JAKARTA_HTTP_CLIENT);
 //        if (useKryoHttpClient!=null && useKryoHttpClient.equals("true")) {
 //        	return new KryoServletCommandSinkJdkHttpClient(url, requestEnhancer);
 //        } 
