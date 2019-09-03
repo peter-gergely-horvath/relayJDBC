@@ -75,7 +75,7 @@
   init() method of Applet. First we try to load the VJDBC-Driver:</p>
 <p class="codefont"> public void init() {<br>
   &nbsp; try {<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;Class.forName(&quot;de.simplicit.vjdbc.VirtualDriver&quot;).newInstance();<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;Class.forName(&quot;VirtualDriver&quot;).newInstance();<br>
   &nbsp;&nbsp;&nbsp;&nbsp;...</p>
 <p class="textfont"> The code to get a JDBC-Connection is in a separate method: 
 </p>
@@ -108,7 +108,7 @@
 <p class="codefont">&lt;BODY&gt;<br>
   This small applet shows how VJDBC can be used to access a JDBC datasource over 
   HTTP.&lt;P&gt;<br>
-  &lt;APPLET CODE=&quot;de.simplicit.vjdbc.test.QuizApplet&quot; ARCHIVE=&quot;vjdbc_applet.jar&quot; 
+  &lt;APPLET CODE=&quot;QuizApplet&quot; ARCHIVE=&quot;vjdbc_applet.jar&quot;
   WIDTH=500 HEIGHT=300&gt;<br>
   &lt;/APPLET&gt;<br>
   &lt;/BODY&gt;</p>

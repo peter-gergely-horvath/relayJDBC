@@ -10,7 +10,7 @@
 
     <servlet>
         <servlet-name>VJdbcServlet</servlet-name>
-        <servlet-class>de.simplicit.vjdbc.server.servlet.ServletCommandSink</servlet-class>
+        <servlet-class>com.github.relayjdbc.server.servlet.ServletCommandSink</servlet-class>
         <init-param>
 			<param-name>config-resource</param-name>
 			<param-value>/WEB-INF/config/vjdbc-config.xml</param-value>

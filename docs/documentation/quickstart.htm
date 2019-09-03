@@ -22,7 +22,7 @@
 <p class="textfont">2. For using VJDBC you only need to change the driver class 
   and the JDBC-String:</p>
 <blockquote> 
-  <p class="codefont"> Class.forName(&quot;de.simplicit.vjdbc.VirtualDriver&quot;).newInstance();<br>
+  <p class="codefont"> Class.forName(&quot;VirtualDriver&quot;).newInstance();<br>
     Connection conn = DriverManager.getConnection(&quot;jdbc:vjdbc:rmi://localhost:2000/VJdbc,testdb&quot;);<br>
     Statement stmt = conn.createStatement();<br>
     ...</p>

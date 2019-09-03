@@ -381,7 +381,7 @@ There is the root element called \texttt{<vjdbc-configuration>}. It can list as 
 ~~~~~~~compressionMode="bestcompression"~\\
 ~~~~~~~compressionThreshold="2000"~\\
 ~~~~~~~connectionPooling="on"~\\
-~~~~~~~loginHandler="de.simplicit.vjdbc.test.SimpleLoginHandler">~\\
+~~~~~~~loginHandler="SimpleLoginHandler">~\\
 ~~~~</connection>~\\
 ~~~~<connection~\\
 ~~~~~~~id="QuizDB"~\\
@@ -764,7 +764,7 @@ package~de.simplicit.vjdbc.test.junit.hsqldb;~\\
 ~\\
 import~java.sql.SQLException;~\\
 import~javax.sql.DataSource;~\\
-import~de.simplicit.vjdbc.server.DataSourceProvider;~\\
+import~DataSourceProvider;~\\
 ~\\
 public~class~HSqlDataSourceProvider~implements~DataSourceProvider~{\{}~\\
 ~~~~public~DataSource~getDataSource()~throws~SQLException~{\{}~\\
@@ -777,7 +777,7 @@ Finally we must specify the DataSourceProvider class in our configuration
 \begin{quote}{\ttfamily \raggedright \noindent
 <connection~\\
 ~~~~id="HSqlDB-DataSource"~\\
-~~~~dataSourceProvider="de.simplicit.vjdbc.test.junit.hsqldb.HSqlDataSourceProvider"~\\
+~~~~dataSourceProvider="HSqlDataSourceProvider"~\\
 ~~~~user="sa"~\\
 ~~~~password="{}"~\\
 ~~~~...
@@ -808,8 +808,8 @@ Now write the class that implements the LoginHandler interface and reads the use
 \begin{quote}{\ttfamily \raggedright \noindent
 package~de.simplicit.vjdbc.test;~\\
 ~\\
-import~de.simplicit.vjdbc.VJdbcException;~\\
-import~de.simplicit.vjdbc.server.LoginHandler;~\\
+import~VJdbcException;~\\
+import~LoginHandler;~\\
 ~\\
 import~java.io.IOException;~\\
 import~java.io.InputStream;~\\

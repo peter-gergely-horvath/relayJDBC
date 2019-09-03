@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<head>
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
 <title>VJDBC Reference</title>
-<meta name="authors" content="Michael Link" />
+<meta name="authors" content="Michael Link" />
+
 <style type="text/css">
 
 /*
@@ -339,11 +341,14 @@ tt.docutils {
 ul.auto-toc {
   list-style-type: none }
 
-</style>
+</style>
+
 </head>
 <body>
-<div class="document" id="vjdbc-reference">
-<h1 class="title">VJDBC Reference</h1>
+<div class="document" id="vjdbc-reference">
+
+<h1 class="title">VJDBC Reference</h1>
+
 <table class="docinfo" frame="void" rules="none">
 <col class="docinfo-name" />
 <col class="docinfo-content" />
@@ -353,7 +358,8 @@ ul.auto-toc {
 <tr><th class="docinfo-name">Version:</th>
 <td>1.6.5 (05.02.2007)</td></tr>
 </tbody>
-</table>
+</table>
+
 <div class="contents topic">
 <p class="topic-title first"><a id="contents" name="contents">Contents</a></p>
 <ul class="auto-toc simple">
@@ -599,7 +605,7 @@ expressions.</p>
        compressionMode=&quot;bestcompression&quot;
        compressionThreshold=&quot;2000&quot;
        connectionPooling=&quot;on&quot;
-       loginHandler=&quot;de.simplicit.vjdbc.test.SimpleLoginHandler&quot;&gt;
+       loginHandler=&quot;SimpleLoginHandler&quot;&gt;
     &lt;/connection&gt;
     &lt;connection
        id=&quot;QuizDB&quot;
@@ -853,7 +859,7 @@ public class CustomRmiServer {
 <p>Switch to use Jakarta HttpClient to connect to the VJDBC-Servlet (true or false, default: false). The commons-httpclient and commons-codec jars must be included in the classpath of the client.</p>
 </li>
 <li><p class="first">VJdbcProperties.SERVLET_REQUEST_ENHANCER_FACTORY</p>
-<p>Name of a class that implements the de.simplicit.vjdbc.servlet.RequestEnhancerFactory interface. If this property is set VJDBC will call the implementing class to create a RequestEnhancer for each VJDBC-Servlet-Connection. See <a class="reference" href="#using-request-enhancers">Using Request-Enhancers</a> for more details.</p>
+<p>Name of a class that implements the RequestEnhancerFactory interface. If this property is set VJDBC will call the implementing class to create a RequestEnhancer for each VJDBC-Servlet-Connection. See <a class="reference" href="#using-request-enhancers">Using Request-Enhancers</a> for more details.</p>
 </li>
 <li><p class="first">VJdbcProperties.CACHE_TABLES</p>
 <p>List of tables which will be cached on the client by using HSQL-DB. Format of the string is <tt class="docutils literal"><span class="pre">{tablename[:refresh-interval],tablename[:refresh-interval]...}</span></tt></p>
@@ -910,7 +916,7 @@ public class HSqlDataSourceProvider implements DataSourceProvider {
 <pre class="literal-block">
 &lt;connection
     id=&quot;HSqlDB-DataSource&quot;
-    dataSourceProvider=&quot;de.simplicit.vjdbc.test.junit.hsqldb.HSqlDataSourceProvider&quot;
+    dataSourceProvider=&quot;HSqlDataSourceProvider&quot;
     user=&quot;sa&quot;
     password=&quot;&quot;
     ...
@@ -1125,7 +1131,9 @@ Connection conn = DriverManager.getConnection(url, props);
 </ul>
 <p>This driver seems to close ResultSets when the last row was passed by the cursor. A succeeding getMetaData() call fails with &quot;resultset is closed&quot;. The connection flag &quot;prefetchResultSetMetaData&quot; can be used to immediately read the meta data before the resultset is closed.</p>
 </div>
-</div>
+</div>
+
 </div>
 </body>
-</html>
+</html>
+

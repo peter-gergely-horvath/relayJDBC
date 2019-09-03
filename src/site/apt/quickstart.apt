@@ -16,7 +16,7 @@ Statement stmt = conn.createStatement();
   2. For using VJDBC you only need to change the driver class and the JDBC-String:
 
 +----------------------------------------------------------------+
-Class.forName("de.simplicit.vjdbc.VirtualDriver").newInstance();
+Class.forName("VirtualDriver").newInstance();
 Connection conn = DriverManager.getConnection("jdbc:vjdbc:rmi://localhost:2000/VJdbc,testdb");
 Statement stmt = conn.createStatement();
 /* make JDBC calls here */

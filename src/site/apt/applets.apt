@@ -47,7 +47,7 @@ The Applet
 +----------------------------------------------------------------+
 public void init() \{
   try \{
-    Class.forName("de.simplicit.vjdbc.VirtualDriver").newInstance();
+    Class.forName("VirtualDriver").newInstance();
     ...
 +----------------------------------------------------------------+
 
@@ -84,7 +84,7 @@ The Deployment
 +----------------------------------------------------------------+
 <BODY>
 This small applet shows how VJDBC can be used to access a JDBC datasource over HTTP.<P>
-<APPLET CODE="de.simplicit.vjdbc.test.QuizApplet" ARCHIVE="vjdbc_applet.jar" WIDTH=500 HEIGHT=300>
+<APPLET CODE="QuizApplet" ARCHIVE="vjdbc_applet.jar" WIDTH=500 HEIGHT=300>
 </APPLET>
 </BODY>
 +----------------------------------------------------------------+

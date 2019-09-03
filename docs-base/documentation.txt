@@ -100,7 +100,7 @@ The RMI-URI contains the reference to the RMI-Registry and the name of the RMI-O
 
 The last part <Connection-Id> is an identifier for the JDBC connection. There can be any number of connection definitions so all clients need to identify the connection they desire to access.
 
-Instead of the comma separator you can also use the following characters to separate the URI from the Connection-Id: ; # $ § so the following connection strings are also valid
+Instead of the comma separator you can also use the following characters to separate the URI from the Connection-Id: ; # $ ï¿½ so the following connection strings are also valid
 
     ``jdbc:vjdbc:rmi://localhost:2000/VJdbc;testdb``
 
@@ -108,7 +108,7 @@ Instead of the comma separator you can also use the following characters to sepa
     
     ``jdbc:vjdbc:rmi://localhost:2000/VJdbc$testdb``
     
-    ``jdbc:vjdbc:rmi://localhost:2000/VJdbc§testdb``
+    ``jdbc:vjdbc:rmi://localhost:2000/VJdbcï¿½testdb``
 
 The server-component can now be started with
 
@@ -131,7 +131,7 @@ The HTTP-URL is certainly the URL to our VJDBC-Servlet, for example:
 
 The red part is the connection id which must correspond to an identifier specified in the VJDBC configuration file.
 
-Instead of the comma separator you can also use the following characters to separate the URI from the Connection-Id: ; # $ § so the following connection strings are also valid
+Instead of the comma separator you can also use the following characters to separate the URI from the Connection-Id: ; # $ ï¿½ so the following connection strings are also valid
 
     ``jdbc:vjdbc:rmi://localhost:2000/VJdbc;testdb``
 
@@ -139,7 +139,7 @@ Instead of the comma separator you can also use the following characters to sepa
     
     ``jdbc:vjdbc:rmi://localhost:2000/VJdbc$testdb``
     
-    ``jdbc:vjdbc:rmi://localhost:2000/VJdbc§testdb``
+    ``jdbc:vjdbc:rmi://localhost:2000/VJdbcï¿½testdb``
 
 Configuration resource
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -156,7 +156,7 @@ If you want to place the configuration in a different location or want to rename
     ...
         <servlet>
             <servlet-name>VJdbcServlet</servlet-name>
-            <servlet-class>de.simplicit.vjdbc.server.servlet.ServletCommandSink</servlet-class>
+            <servlet-class>ServletCommandSink</servlet-class>
             <init-param>
                 <param-name>config-resource</param-name>
                 <param-value>/WEB-INF/config/what-a-config.xml</param-value>
@@ -174,7 +174,7 @@ You can also use the configuration variables feature (see `Configuration Variabl
     ...
         <servlet>
             <servlet-name>VJdbcServlet</servlet-name>
-            <servlet-class>de.simplicit.vjdbc.server.servlet.ServletCommandSink</servlet-class>
+            <servlet-class>ServletCommandSink</servlet-class>
             <init-param>
                 <param-name>config-resource</param-name>
                 <param-value>/WEB-INF/config/what-a-config.xml</param-value>
@@ -229,7 +229,7 @@ There is the root element called ``<vjdbc-configuration>``. It can list as many 
            compressionMode="bestcompression"
            compressionThreshold="2000"
            connectionPooling="on"
-           loginHandler="de.simplicit.vjdbc.test.SimpleLoginHandler">
+           loginHandler="SimpleLoginHandler">
         </connection>
         <connection
            id="QuizDB"
@@ -514,7 +514,7 @@ You can set different VJDBC-specific properties in the Properties-Object that is
 
 * VJdbcProperties.SERVLET_REQUEST_ENHANCER_FACTORY
 
-  Name of a class that implements the de.simplicit.vjdbc.servlet.RequestEnhancerFactory interface. If this property is set VJDBC will call the implementing class to create a RequestEnhancer for each VJDBC-Servlet-Connection. See `Using Request-Enhancers`_ for more details.
+  Name of a class that implements the RequestEnhancerFactory interface. If this property is set VJDBC will call the implementing class to create a RequestEnhancer for each VJDBC-Servlet-Connection. See `Using Request-Enhancers`_ for more details.
 
 * VJdbcProperties.CACHE_TABLES
   
@@ -567,7 +567,7 @@ Now the DataSourceProvider implementation for VJDBC
 
     import java.sql.SQLException;
     import javax.sql.DataSource;
-    import de.simplicit.vjdbc.server.DataSourceProvider;
+    import DataSourceProvider;
 
     public class HSqlDataSourceProvider implements DataSourceProvider {
         public DataSource getDataSource() throws SQLException {
@@ -581,7 +581,7 @@ Finally we must specify the DataSourceProvider class in our configuration
 
     <connection
         id="HSqlDB-DataSource"
-        dataSourceProvider="de.simplicit.vjdbc.test.junit.hsqldb.HSqlDataSourceProvider"
+        dataSourceProvider="HSqlDataSourceProvider"
         user="sa"
         password=""
         ...
@@ -610,8 +610,8 @@ Now write the class that implements the LoginHandler interface and reads the use
 
     package de.simplicit.vjdbc.test;
 
-    import de.simplicit.vjdbc.VJdbcException;
-    import de.simplicit.vjdbc.server.LoginHandler;
+    import VJdbcException;
+    import LoginHandler;
 
     import java.io.IOException;
     import java.io.InputStream;
