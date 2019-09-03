@@ -2,3 +2,6 @@ target/
 builddir/
 .svn/
 bin
+
+.idea/
+*.iml
