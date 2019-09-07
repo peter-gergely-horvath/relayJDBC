@@ -511,7 +511,7 @@ expressions.</p>
 </blockquote>
 <p>The server-component can now be started with</p>
 <blockquote>
-<tt class="docutils literal"><span class="pre">java</span> <span class="pre">-classpath</span> <span class="pre">vjdbc.jar;vjdbc_server.jar;commons-beanutils.jar;commons-collections-2.1.1.jar;commons-dbcp-1.2.1.jar;commons-digester.jar;commons-logging.jar;commons-pool-1.2.jar;jakarta-oro-2.0.8.jar;log4j-1.2.8.jar</span> <span class="pre">de.simplicit.vjdbc.server.rmi.ConnectionServer</span> <span class="pre">vjdbc_jdbcodbc_basic.xml</span></tt></blockquote>
+<tt class="docutils literal"><span class="pre">java</span> <span class="pre">-classpath</span> <span class="pre">vjdbc.jar;vjdbc_server.jar;commons-beanutils.jar;commons-collections-2.1.1.jar;commons-dbcp-1.2.1.jar;commons-digester.jar;commons-logging.jar;commons-pool-1.2.jar;jakarta-oro-2.0.8.jar;log4j-1.2.8.jar</span> <span class="pre">com.github.relayjdbc.server.rmi.ConnectionServer</span> <span class="pre">vjdbc_jdbcodbc_basic.xml</span></tt></blockquote>
 <p>The one and only argument is the configuration file which contains the connection definitions for this server process.</p>
 </div>
 <div class="section">
@@ -541,7 +541,7 @@ expressions.</p>
 ...
     &lt;servlet&gt;
         &lt;servlet-name&gt;VJdbcServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;de.simplicit.vjdbc.server.servlet.ServletCommandSink&lt;/servlet-class&gt;
+        &lt;servlet-class&gt;com.github.relayjdbc.server.servlet.ServletCommandSink&lt;/servlet-class&gt;
         &lt;init-param&gt;
             &lt;param-name&gt;config-resource&lt;/param-name&gt;
             &lt;param-value&gt;/WEB-INF/config/what-a-config.xml&lt;/param-value&gt;
@@ -557,7 +557,7 @@ expressions.</p>
 ...
     &lt;servlet&gt;
         &lt;servlet-name&gt;VJdbcServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;de.simplicit.vjdbc.server.servlet.ServletCommandSink&lt;/servlet-class&gt;
+        &lt;servlet-class&gt;com.github.relayjdbc.server.servlet.ServletCommandSink&lt;/servlet-class&gt;
         &lt;init-param&gt;
             &lt;param-name&gt;config-resource&lt;/param-name&gt;
             &lt;param-value&gt;/WEB-INF/config/what-a-config.xml&lt;/param-value&gt;
@@ -900,11 +900,11 @@ public class HSqlDataSource implements DataSource {
 </pre>
 <p>Now the DataSourceProvider implementation for VJDBC</p>
 <pre class="literal-block">
-package de.simplicit.vjdbc.test.junit.hsqldb;
+package com.github.relayjdbc.test.junit.hsqldb;
 
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import de.simplicit.vjdbc.server.DataSourceProvider;
+import com.github.relayjdbc.server.DataSourceProvider;
 
 public class HSqlDataSourceProvider implements DataSourceProvider {
     public DataSource getDataSource() throws SQLException {
@@ -936,10 +936,10 @@ gerry=cool
 </pre>
 <p>Now write the class that implements the LoginHandler interface and reads the user.properties file</p>
 <pre class="literal-block">
-package de.simplicit.vjdbc.test;
+package com.github.relayjdbc.test;
 
-import de.simplicit.vjdbc.VJdbcException;
-import de.simplicit.vjdbc.server.LoginHandler;
+import com.github.relayjdbc.VJdbcException;
+import com.github.relayjdbc.server.LoginHandler;
 
 import java.io.IOException;
 import java.io.InputStream;

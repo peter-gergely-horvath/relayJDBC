@@ -297,7 +297,7 @@ The last part {\textless}Connection-Id{\textgreater} is an identifier for the JD
 The server-component can now be started with
 \begin{quote}
 
-\texttt{java -classpath vjdbc.jar;vjdbc{\_}server.jar;commons-beanutils.jar;commons-collections-2.1.1.jar;commons-dbcp-1.2.1.jar;commons-digester.jar;commons-logging.jar;commons-pool-1.2.jar;jakarta-oro-2.0.8.jar;log4j-1.2.8.jar de.simplicit.vjdbc.server.rmi.ConnectionServer vjdbc{\_}jdbcodbc{\_}basic.xml}
+\texttt{java -classpath vjdbc.jar;vjdbc{\_}server.jar;commons-beanutils.jar;commons-collections-2.1.1.jar;commons-dbcp-1.2.1.jar;commons-digester.jar;commons-logging.jar;commons-pool-1.2.jar;jakarta-oro-2.0.8.jar;log4j-1.2.8.jar com.github.relayjdbc.server.rmi.ConnectionServer vjdbc{\_}jdbcodbc{\_}basic.xml}
 \end{quote}
 
 The one and only argument is the configuration file which contains the connection definitions for this server process.
@@ -760,7 +760,7 @@ public~class~HSqlDataSource~implements~DataSource~{\{}~\\
 
 Now the DataSourceProvider implementation for VJDBC
 \begin{quote}{\ttfamily \raggedright \noindent
-package~de.simplicit.vjdbc.test.junit.hsqldb;~\\
+package~com.github.relayjdbc.test.junit.hsqldb;~\\
 ~\\
 import~java.sql.SQLException;~\\
 import~javax.sql.DataSource;~\\
@@ -806,7 +806,7 @@ gerry=cool
 
 Now write the class that implements the LoginHandler interface and reads the user.properties file
 \begin{quote}{\ttfamily \raggedright \noindent
-package~de.simplicit.vjdbc.test;~\\
+package~com.github.relayjdbc.test;~\\
 ~\\
 import~VJdbcException;~\\
 import~LoginHandler;~\\
