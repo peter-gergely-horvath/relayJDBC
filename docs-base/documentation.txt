@@ -112,7 +112,7 @@ Instead of the comma separator you can also use the following characters to sepa
 
 The server-component can now be started with
 
-	``java -classpath vjdbc.jar;vjdbc_server.jar;commons-beanutils.jar;commons-collections-2.1.1.jar;commons-dbcp-1.2.1.jar;commons-digester.jar;commons-logging.jar;commons-pool-1.2.jar;jakarta-oro-2.0.8.jar;log4j-1.2.8.jar de.simplicit.vjdbc.server.rmi.ConnectionServer vjdbc_jdbcodbc_basic.xml``
+	``java -classpath vjdbc.jar;vjdbc_server.jar;commons-beanutils.jar;commons-collections-2.1.1.jar;commons-dbcp-1.2.1.jar;commons-digester.jar;commons-logging.jar;commons-pool-1.2.jar;jakarta-oro-2.0.8.jar;log4j-1.2.8.jar com.github.relayjdbc.server.rmi.ConnectionServer vjdbc_jdbcodbc_basic.xml``
 
 The one and only argument is the configuration file which contains the connection definitions for this server process.
 
@@ -563,7 +563,7 @@ Now the DataSourceProvider implementation for VJDBC
 
 ::
 
-    package de.simplicit.vjdbc.test.junit.hsqldb;
+    package com.github.relayjdbc.test.junit.hsqldb;
 
     import java.sql.SQLException;
     import javax.sql.DataSource;
@@ -608,7 +608,7 @@ Now write the class that implements the LoginHandler interface and reads the use
 
 ::
 
-    package de.simplicit.vjdbc.test;
+    package com.github.relayjdbc.test;
 
     import VJdbcException;
     import LoginHandler;

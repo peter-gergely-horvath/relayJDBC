@@ -4,6 +4,7 @@
 
 package com.github.relayjdbc.util;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,27 +19,13 @@ public final class StreamCloser {
     }
     
     /**
-     * Closes an InputStream.
-     * @param is InputStream to close
+     * Closes a Closeable.
+     * @param closeable Closeable to close
      */
-    public static void close(InputStream is) {
-        if(is != null) {
+    public static void close(Closeable closeable) {
+        if(closeable != null) {
             try {
-                is.close();
-            }
-            catch(IOException e) {
-            }
-        }
-    }
-    
-    /**
-     * Closes an OutputStream
-     * @param os OutputStream to close
-     */
-    public static void close(OutputStream os) {
-        if(os != null) {
-            try {
-                os.close();
+                closeable.close();
             }
             catch(IOException e) {
             }

@@ -26,7 +26,7 @@ final class RequestModifierJdk implements RequestModifier {
     }
     
     /* (non-Javadoc)
-     * @see de.simplicit.vjdbc.servlet.RequestModifier#addRequestProperty(java.lang.String, java.lang.String)
+     * @see com.github.relayjdbc.servlet.RequestModifier#addRequestProperty(java.lang.String, java.lang.String)
      */
     public void addRequestHeader(String key, String value) {
         _urlConnection.addRequestProperty(key, value);

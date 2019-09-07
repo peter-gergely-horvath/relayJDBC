@@ -3,7 +3,7 @@ package com.github.relayjdbc.test.junit.hsqldb;
 import java.io.IOException;
 
 import com.github.relayjdbc.server.config.ConfigurationException;
-//import de.simplicit.vjdbc.server.rmi.ConnectionServer;
+//import com.github.relayjdbc.server.rmi.ConnectionServer;
 
 public class HSqlDbDynamicConfigurationServer {
     public static void main(String[] args) throws ConfigurationException, IOException {

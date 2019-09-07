@@ -31,7 +31,7 @@ public class InflatingInput extends Input {
 			if (header==DeflatingOutput.DEFLATED_HEADER){
 				inputStream = new InflaterInputStream(inputStream);
 			} else if (header!=DeflatingOutput.CLEAR_HEADER){
-				throw new KryoException("Invalid stream header");
+				throw new KryoException("Invalid stream header: " + Integer.toHexString(header));
 			}
 			
 			streamInitialized = true;

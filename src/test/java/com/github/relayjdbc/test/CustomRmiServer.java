@@ -4,7 +4,7 @@
 
 package com.github.relayjdbc.test;
 
-//import de.simplicit.vjdbc.server.rmi.ConnectionServer;
+//import com.github.relayjdbc.server.rmi.ConnectionServer;
 
 public class CustomRmiServer {
     public static void main(String[] args) {

@@ -55,7 +55,7 @@ Release 1.6.4 (19 Aug 2006)
 Release 1.6.3 (08 Apr 2006)
 ---------------------------
 * FEA: Now using SVN-Support of SourceForge
-* CLN: Classes in de.simplicit.vjdbc are now public. Some tools (i.e. Spring) seem to have problems when 
+* CLN: Classes in com.github.relayjdbc are now public. Some tools (i.e. Spring) seem to have problems when
        they access these classes via reflection without using the public JDBC-Interfaces (thx to Anton Keks)
 * CLN: CommandSinks now must support a close-Method for cleanup
 * BUG: New Shutdown-Hook destroys CommandProcessor-Singleton
@@ -116,7 +116,7 @@ Release 1.4 (11 Jun 2005)
        server reads the next RowPacket which can be delivered instantly with the next Remote-Call.
 * OPT: Changed expensive instanceof-Calls in StreamingResultset into switch-Statements
 * FEA: Implemented getRef()-API
-* FEA: Improved support for ad-hoc conversions within StreamingResultSet (thx to Erik Jõgi)
+* FEA: Improved support for ad-hoc conversions within StreamingResultSet (thx to Erik Jï¿½gi)
 * FEA: Long running database operations were accidently terminated by the OrphanedConnectionCollectorTask.
        This is now prevented by marking the connection as active.
 * FEA: Now it can be specified which client-side system properties are delivered to the server for
@@ -225,7 +225,7 @@ Release 0.8.3 (08 February 2004)
 * Support for connection pooling with Jakarta-DBCP; use vjdbc.connectionpooling for turning
     it on/off (default is on)
 * Moved all server-specific classes and interfaces in a separate package called
-    de.simplicit.vjdbc.server; adjusted build to generate separate jars, too
+    com.github.relayjdbc.server; adjusted build to generate separate jars, too
 * Reduced size of distribution by stripping down the J2EE and Rowset jars to the
     necessary classes
 * Reworked Servlet-Client a little bit
