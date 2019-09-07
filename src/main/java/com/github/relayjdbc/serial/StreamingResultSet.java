@@ -5,7 +5,7 @@
 package com.github.relayjdbc.serial;
 
 import com.github.relayjdbc.command.*;
-import de.simplicit.vjdbc.command.*;
+import com.github.relayjdbc.command.*;
 import com.github.relayjdbc.util.SQLExceptionHelper;
 
 import org.apache.commons.logging.Log;

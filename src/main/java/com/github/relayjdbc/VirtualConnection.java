@@ -8,8 +8,6 @@ import com.github.relayjdbc.cache.TableCache;
 import com.github.relayjdbc.command.*;
 import com.github.relayjdbc.serial.*;
 import com.github.relayjdbc.util.ClientInfo;
-import de.simplicit.vjdbc.command.*;
-import de.simplicit.vjdbc.serial.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

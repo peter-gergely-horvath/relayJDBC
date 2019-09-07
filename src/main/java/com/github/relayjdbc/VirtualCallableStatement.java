@@ -7,8 +7,8 @@ package com.github.relayjdbc;
 import com.github.relayjdbc.command.*;
 import com.github.relayjdbc.serial.*;
 import com.github.relayjdbc.util.SQLExceptionHelper;
-import de.simplicit.vjdbc.command.*;
-import de.simplicit.vjdbc.serial.*;
+import com.github.relayjdbc.command.*;
+import com.github.relayjdbc.serial.*;
 
 import java.io.InputStream;
 import java.io.Reader;

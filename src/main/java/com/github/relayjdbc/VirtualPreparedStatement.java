@@ -21,8 +21,8 @@ import com.github.relayjdbc.command.PreparedStatementExecuteBatchCommand;
 import com.github.relayjdbc.command.PreparedStatementExecuteCommand;
 import com.github.relayjdbc.command.PreparedStatementQueryCommand;
 import com.github.relayjdbc.command.PreparedStatementUpdateCommand;
-import de.simplicit.vjdbc.parameters.*;
-import de.simplicit.vjdbc.serial.*;
+import com.github.relayjdbc.parameters.*;
+import com.github.relayjdbc.serial.*;
 
 public class VirtualPreparedStatement extends VirtualStatement implements PreparedStatement {
     private static PreparedStatementParameter[] _emptyParameters = new PreparedStatementParameter[0];
