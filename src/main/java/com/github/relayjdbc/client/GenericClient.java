@@ -114,7 +114,7 @@ public class GenericClient implements CommandSink {
 
     @Override
     public void close() {
-        // no-op
+        transport.close();
     }
 
     private void updatePerformanceConfig(ConnectionSetClientInfoCommand cmd) {

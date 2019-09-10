@@ -2,6 +2,7 @@ package com.github.relayjdbc.server;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
+import com.github.relayjdbc.VJdbcException;
 import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
@@ -24,7 +25,7 @@ import java.util.Properties;
 
 public class CommandDispatcher {
 
-    private static Log _logger = LogFactory.getLog(CommandDispatcher.class);
+    private static Log logger = LogFactory.getLog(CommandDispatcher.class);
 
     private final CommandProcessor commandProcessor;
 
@@ -33,79 +34,50 @@ public class CommandDispatcher {
     }
 
     public void dispatch(InputStream inputStream, OutputStream os) {
-        Input input = null;
-        DeflatingOutput output = null;
+        logger.info("dispatch requested");
+
         Kryo kryo = null;
-        try {
+        try (DeflatingOutput output = new DeflatingOutput(os);
+             Input input = new InflatingInput(inputStream);) {
+
             kryo = KryoFactory.getInstance().getKryo();
 
-            input = new InflatingInput(inputStream);
+            Object objectToReturn = dispatchCommandInternal(kryo, output, input);
 
-            checkMessageHeader(input, kryo);
-
-            String method = kryo.readObject(input, String.class);
-
-            if (method == null) {
-                throw new RuntimeException("Unknown or empty command received: " + method);
-            }
-
-            output = new DeflatingOutput(os);
-            Object objectToReturn = null;
-
-            try {
-                // Some command to process ?
-                if (method.equals(ServletCommandSinkIdentifier.PROCESS_COMMAND)) {
-                    // Read parameter objects
-                    Long connuid = kryo.readObjectOrNull(input, Long.class);
-                    Long uid = kryo.readObjectOrNull(input, Long.class);
-                    Command cmd = (Command) kryo.readClassAndObject(input);
-                    CallingContext ctx = kryo.readObjectOrNull(input, CallingContext.class);
-                    if (connuid != null) {
-                        ConnectionContext connectionEntry = commandProcessor.getConnectionEntry(connuid);
-                        if (connectionEntry != null) {
-                            output.setCompressionMode(connectionEntry.getCompressionMode());
-                            output.setThreshold(connectionEntry.getCompressionThreshold());
-                        }
-                    }
-                    // Delegate execution to the CommandProcessor
-                    objectToReturn = commandProcessor.process(connuid, uid, cmd, ctx);
-                } else if (method.equals(ServletCommandSinkIdentifier.CONNECT_COMMAND)) {
-                    String url = kryo.readObject(input, String.class);
-                    Properties props = kryo.readObject(input, Properties.class);
-                    Properties clientInfo = kryo.readObject(input, Properties.class);
-                    CallingContext ctx = kryo.readObjectOrNull(input, CallingContext.class);
-
-                    ConnectionConfiguration connectionConfiguration = VJdbcConfiguration.singleton().getConnection(url);
-
-                    if (connectionConfiguration != null) {
-                        Connection conn = connectionConfiguration.create(props);
-                        Object userName = props.get(VJdbcProperties.USER_NAME);
-                        if (userName != null) {
-                            clientInfo.put(VJdbcProperties.USER_NAME, userName);
-                        }
-                        objectToReturn = commandProcessor.registerConnection(conn, connectionConfiguration, clientInfo, ctx);
-                    } else {
-                        objectToReturn = new SQLException("VJDBC-Connection " + url + " not found");
-                    }
-                }
-            } catch (Throwable t) {
-                // Wrap any exception so that it can be transported back to
-                // the client
-                objectToReturn = SQLExceptionHelper.wrap(t);
-            }
-
-            // Write the result in the response buffer
             kryo.writeClassAndObject(output, objectToReturn);
             output.flush();
-            StreamCloser.close(output);
-            output = null;
 
         } finally {
-            StreamCloser.close(input);
-            StreamCloser.close(output);
             if (kryo != null) {
                 KryoFactory.getInstance().releaseKryo(kryo);
             }
+        }
+    }
+
+    private Object dispatchCommandInternal(Kryo kryo, DeflatingOutput output, Input input) {
+        try {
+            checkMessageHeader(input, kryo);
+
+            String method = kryo.readObject(input, String.class);
+            logger.info("Method: " + method);
+
+            if (method == null) {
+                throw new IllegalStateException("method is null");
+            }
+
+            switch (method) {
+                case ServletCommandSinkIdentifier.PROCESS_COMMAND:
+                    return dispatchProcess(kryo, input, output);
+
+                case ServletCommandSinkIdentifier.CONNECT_COMMAND:
+                    return dispatchConnect(kryo, input);
+
+                default:
+                    throw new IllegalStateException("Unknown method: " + method);
+            }
+        } catch (Throwable t) {
+            // Wrap any Throwable so that it can be transported back to the client
+            return SQLExceptionHelper.wrap(t);
         }
     }
 
@@ -113,7 +85,7 @@ public class CommandDispatcher {
         try {
             String magic = kryo.readObject(input, String.class);
             if (!ProtocolConstants.MAGIC.equals(magic)) {
-                _logger.warn("Protocol error: magic not found, but was: " + magic);
+                logger.warn("Protocol error: magic not found, but was: " + magic);
                 throw new RuntimeException("Protocol error: magic not found, but was: " + magic);
             }
 
@@ -121,13 +93,60 @@ public class CommandDispatcher {
             if (!KryoServletCommandSink.PROTOCOL_VERSION.equals(clientVersion)) {
                 String errorMsg = String.format("Protocol version mismatch: expected %s but was %s",
                         KryoServletCommandSink.PROTOCOL_VERSION, clientVersion);
-                _logger.warn(errorMsg);
+                logger.warn(errorMsg);
                 throw new RuntimeException(errorMsg);
             }
         } catch (Exception ex) {
-            _logger.warn("Handshake failed", ex);
+            logger.warn("Handshake failed", ex);
             throw new RuntimeException("Protocol error: Handshake failed", ex);
         }
 
+        logger.info("header OK");
+
     }
+
+    private Object dispatchProcess(Kryo kryo, Input input, DeflatingOutput output) throws SQLException {
+        logger.info("dispatchProcess");
+
+        // Read parameter objects
+        Long connuid = kryo.readObjectOrNull(input, Long.class);
+        Long uid = kryo.readObjectOrNull(input, Long.class);
+        Command cmd = (Command) kryo.readClassAndObject(input);
+        CallingContext ctx = kryo.readObjectOrNull(input, CallingContext.class);
+        if (connuid != null) {
+            ConnectionContext connectionEntry = commandProcessor.getConnectionEntry(connuid);
+            if (connectionEntry != null) {
+                output.setCompressionMode(connectionEntry.getCompressionMode());
+                output.setThreshold(connectionEntry.getCompressionThreshold());
+            }
+        }
+        // Delegate execution to the CommandProcessor
+        return commandProcessor.process(connuid, uid, cmd, ctx);
+    }
+
+    private Object dispatchConnect(Kryo kryo, Input input) throws SQLException, VJdbcException {
+        logger.info("dispatchConnect");
+
+        String url = kryo.readObject(input, String.class);
+        Properties props = kryo.readObject(input, Properties.class);
+        Properties clientInfo = kryo.readObject(input, Properties.class);
+        CallingContext ctx = kryo.readObjectOrNull(input, CallingContext.class);
+
+        ConnectionConfiguration connectionConfiguration = VJdbcConfiguration.singleton().getConnection(url);
+
+        if (connectionConfiguration == null) {
+            return new SQLException("VJDBC-Connection " + url + " not found");
+        }
+
+        Connection conn = connectionConfiguration.create(props);
+        Object userName = props.get(VJdbcProperties.USER_NAME);
+        if (userName != null) {
+            clientInfo.put(VJdbcProperties.USER_NAME, userName);
+        }
+        return commandProcessor.registerConnection(conn, connectionConfiguration, clientInfo, ctx);
+
+
+    }
+
+
 }

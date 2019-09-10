@@ -9,33 +9,33 @@ import com.esotericsoftware.kryo.io.Input;
 
 public class InflatingInput extends Input {
 
-	private boolean streamInitialized = false;
-	
-	public InflatingInput(InputStream inputStream, int bufferSize) {
-		super(inputStream, bufferSize);
-	}
+    private boolean streamInitialized = false;
 
-	public InflatingInput(InputStream inputStream) {
-		super(inputStream);
-	}
+    public InflatingInput(InputStream inputStream, int bufferSize) {
+        super(inputStream, bufferSize);
+    }
 
-	@Override
-	protected int fill(byte[] buffer, int offset, int count) throws KryoException {
-		if (!streamInitialized){
-			int header;
-			try {
-				header = inputStream.read();
-			} catch (IOException e) {
-				throw new KryoException(e);
-			}			
-			if (header==DeflatingOutput.DEFLATED_HEADER){
-				inputStream = new InflaterInputStream(inputStream);
-			} else if (header!=DeflatingOutput.CLEAR_HEADER){
-				throw new KryoException("Invalid stream header: " + Integer.toHexString(header));
-			}
-			
-			streamInitialized = true;
-		}		
-		return super.fill(buffer, offset, count);
-	}
+    public InflatingInput(InputStream inputStream) {
+        super(inputStream);
+    }
+
+    @Override
+    protected int fill(byte[] buffer, int offset, int count) throws KryoException {
+        if (!streamInitialized) {
+            int header;
+            try {
+                header = inputStream.read();
+            } catch (IOException e) {
+                throw new KryoException(e);
+            }
+            if (header == DeflatingOutput.DEFLATED_HEADER) {
+                inputStream = new InflaterInputStream(inputStream);
+            } else if (header != DeflatingOutput.CLEAR_HEADER) {
+                throw new KryoException("Invalid stream header: " + Integer.toHexString(header));
+            }
+
+            streamInitialized = true;
+        }
+        return super.fill(buffer, offset, count);
+    }
 }

@@ -1,4 +1,4 @@
-package com.github.relayjdbc.server.stdio;
+package com.github.relayjdbc.server.base64pipe;
 
 import java.io.IOException;
 import java.io.InputStream;

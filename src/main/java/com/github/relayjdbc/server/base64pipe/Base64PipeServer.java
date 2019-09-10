@@ -1,22 +1,28 @@
-package com.github.relayjdbc.server.stdio;
+package com.github.relayjdbc.server.base64pipe;
 
 import com.github.relayjdbc.server.config.ConfigurationException;
 import com.github.relayjdbc.server.stream.StreamServer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.*;
 import java.util.Base64;
 import java.util.Properties;
 
-public class StdIOServer {
+public class Base64PipeServer {
+
+    private static Log logger = LogFactory.getLog(Base64PipeServer.class);
 
     public static void main(String[] args) throws IOException, ConfigurationException {
-        new StdIOServer().runApp(args);
+        new Base64PipeServer().runApp(args);
     }
 
     protected void runApp(String[] args) throws IOException, ConfigurationException {
         if (!(args.length == 1 || args.length == 2)) {
             throw new RuntimeException("Expected arguments <configuration file> [properties file]");
         }
+
+        logger.info("Configuring server from: " + args[0]);
 
         InputStream configFileInputStream = getConfigFileStream(args[0]);
 
@@ -32,10 +38,13 @@ public class StdIOServer {
         StreamServer streamServer = new StreamServer(configFileInputStream, properties);
 
         try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getStdIn()));
-            OutputStream stdOut = getStdOut()) {
+            PrintWriter response = new PrintWriter(getStdOut())) {
 
             while(!Thread.currentThread().isInterrupted()) {
+                logger.info("Awaiting console input");
                 String lineRead = bufferedReader.readLine();
+                logger.info("Read line from input: " + lineRead);
+
                 if (lineRead == null) {
                     break;
                 }
@@ -51,10 +60,11 @@ public class StdIOServer {
                 byteArrayOutputStream.flush();
                 byte[] responseBytes = byteArrayOutputStream.toByteArray();
 
+                String responseEncoded = Base64.getEncoder().encodeToString(responseBytes);
 
-                byte[] responseEncoded = Base64.getEncoder().encode(responseBytes);
-
-                stdOut.write(responseEncoded);
+                logger.info("Writing response: " + responseEncoded);
+                response.println(responseEncoded);
+                response.flush();
             }
         }
 

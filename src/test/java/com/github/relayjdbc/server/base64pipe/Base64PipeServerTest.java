@@ -1,4 +1,4 @@
-package com.github.relayjdbc.server.stdio;
+package com.github.relayjdbc.server.base64pipe;
 
 import com.github.relayjdbc.protocol.Decoder;
 import com.github.relayjdbc.protocol.Encoder;
@@ -25,7 +25,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class StdIOServerTest {
+public class Base64PipeServerTest {
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -49,10 +49,10 @@ public class StdIOServerTest {
         OutputStream clientWriter = Base64.getEncoder().wrap(Channels.newOutputStream(stdInPipe.sink()));
         InputStream clientReader = Base64.getDecoder().wrap(Channels.newInputStream(stdOutPipe.source()));
 
-        StdIOServer stdIOServer = new StdIOServer() {
+        Base64PipeServer base64PipeServer = new Base64PipeServer() {
             @Override
             protected InputStream getConfigFileStream(String fileToLoad) throws FileNotFoundException {
-                InputStream resourceAsStream = StdIOServerTest.class.getResourceAsStream(fileToLoad);
+                InputStream resourceAsStream = Base64PipeServerTest.class.getResourceAsStream(fileToLoad);
                 Objects.requireNonNull(resourceAsStream, "config is not found");
 
                 return resourceAsStream;
@@ -71,7 +71,7 @@ public class StdIOServerTest {
 
         executorService.execute(() -> {
             try {
-                stdIOServer.runApp(new String[] {"config.xml"});
+                base64PipeServer.runApp(new String[] {"config.xml"});
             } catch (ConfigurationException | IOException e) {
                 throw new RuntimeException(e);
             }
