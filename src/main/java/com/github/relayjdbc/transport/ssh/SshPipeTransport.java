@@ -10,11 +10,27 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import java.io.*;
-import java.util.Objects;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 public class SshPipeTransport implements Transport {
+
+    private static final String SSH_USERNAME = "ssh.username";
+    private static final String SSH_PASSWORD = "ssh.password";
+
+    private static final String SSH_REMOTE_COMMAND = "ssh.remoteCommand";
+
+    private static final String STRICT_HOST_KEY_CHECKING = "ssh.strictHostKeyChecking";
+
+
+    private static final class JSchConstants {
+
+        private static final String JSCH_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
+        private static final String DISABLE_STRICT_HOST_KEY_CHECKING = "no";
+    }
+
 
     private final String url;
     private final Properties properties;
@@ -31,28 +47,32 @@ public class SshPipeTransport implements Transport {
             this.url = urlString;
             this.properties = properties;
 
+            final String user = getRequiredProperty(properties, SSH_USERNAME);
+            final String password = getRequiredProperty(properties, SSH_PASSWORD);
+            final String remoteCommand = getRequiredProperty(properties, SSH_REMOTE_COMMAND);
+
+            String strictHostCheckingProperty =
+                    properties.getProperty(STRICT_HOST_KEY_CHECKING, JSchConstants.DISABLE_STRICT_HOST_KEY_CHECKING);
+
+
+            final String host = url.split(":")[0];
+            final int port = Integer.parseInt(url.split(":")[1]);
+
+
             JSch jsch = new JSch();
-
-            String user = properties.getProperty("ssh.username");
-            String host = url.split(":")[0];
-            int port = Integer.parseInt(url.split(":")[1]);
-
             session = jsch.getSession(user, host, port);
-            session.setPassword(properties.getProperty("ssh.password"));
 
+            session.setPassword(password);
 
-            // disabling StrictHostKeyChecking may help to make connection but makes it insecure
-            // see http://stackoverflow.com/questions/30178936/jsch-sftp-security-with-session-setconfigstricthostkeychecking-no
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
+            Properties config = new Properties();
+
+            config.put(JSchConstants.JSCH_STRICT_HOST_KEY_CHECKING, strictHostCheckingProperty);
             session.setConfig(config);
 
             session.connect();
 
             channel = (ChannelExec) session.openChannel("exec");
 
-            String remoteCommand = properties.getProperty("ssh.remoteCommand");
-            Objects.requireNonNull(remoteCommand, "ssh.remoteCommand");
             channel.setCommand(remoteCommand);
 
             inputStream = channel.getInputStream();
@@ -63,9 +83,18 @@ public class SshPipeTransport implements Transport {
                     new CloseSuppressingOutputStreamWrapper(outputStream));
 
             channel.connect();
+
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getRequiredProperty(Properties properties, String propertyName) {
+        String propertyValue = properties.getProperty(propertyName);
+        if (propertyValue == null) {
+            throw new RuntimeException("Required property is not found: " + propertyName);
+        }
+        return propertyValue;
     }
 
     @Override
