@@ -28,16 +28,10 @@ public class VirtualConnection extends VirtualBase implements Connection {
     protected DatabaseMetaData _databaseMetaData;
     protected boolean _isClosed = false;
 
-    protected ProxyFactory proxyFactory = null;
-
     public VirtualConnection(UIDEx reg, DecoratedCommandSink sink, Properties props, boolean cachingEnabled) {
         super(reg, sink);
         _connectionProperties = props;
         _cachingEnabled = cachingEnabled;
-    }
-
-    public void setProxyFactory(ProxyFactory factory) {
-        proxyFactory = factory;
     }
 
     protected void finalize() throws Throwable {
@@ -47,12 +41,11 @@ public class VirtualConnection extends VirtualBase implements Connection {
     }
 
     public Statement createStatement() throws SQLException {
-    	Object result = _sink.queue(_objectUid, ConnectionCreateStatementCommand.INSTANCE, true);
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualStatement(reg, this, _sink, ResultSet.TYPE_FORWARD_ONLY);
+        UIDEx result = _sink.queue(_objectUid, ConnectionCreateStatementCommand.INSTANCE, true);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (Statement)proxyFactory.makeJdbcObject(result);
+        return new VirtualStatement(result, this, _sink, ResultSet.TYPE_FORWARD_ONLY);
     }
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
@@ -78,26 +71,24 @@ public class VirtualConnection extends VirtualBase implements Connection {
         }
 
         if(pstmt == null) {
-            Object result = _sink.queue(_objectUid, new ConnectionPrepareStatementCommand(sql), true);
-
-            if (result instanceof UIDEx) {
-                UIDEx reg = (UIDEx)result;
-                pstmt = new VirtualPreparedStatement(reg, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
-            } else {
-                pstmt = (PreparedStatement)proxyFactory.makeJdbcObject(result);
+            UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareStatementCommand(sql), true);
+            if (result == null) {
+                throw new SQLException("call returned null");
             }
+
+            pstmt = new VirtualPreparedStatement(result, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
         }
 
         return pstmt;
     }
 
     public CallableStatement prepareCall(String sql) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareCallCommand(sql), true);
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualCallableStatement(reg, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareCallCommand(sql), true);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (CallableStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualCallableStatement(result, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
     }
 
     public String nativeSQL(String sql) throws SQLException {
@@ -151,8 +142,6 @@ public class VirtualConnection extends VirtualBase implements Connection {
                 _databaseMetaData = new VirtualDatabaseMetaData(this, reg, _sink);
             } else if (result instanceof SerialDatabaseMetaData){
             	_databaseMetaData = new VirtualDatabaseMetaData(this, (SerialDatabaseMetaData)result, _sink);
-            } else {
-                _databaseMetaData = (DatabaseMetaData)proxyFactory.makeJdbcObject(result);
             }
         }
         return _databaseMetaData;
@@ -213,38 +202,38 @@ public class VirtualConnection extends VirtualBase implements Connection {
     }
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        Object result = _sink.queue(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "createStatement",
+        UIDEx result = _sink.queue(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "createStatement",
                 new Object[]{new Integer(resultSetType), new Integer(resultSetConcurrency)},
                 ParameterTypeCombinations.INTINT), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualStatement(reg, this, _sink, resultSetType);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (Statement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualStatement(result, this, _sink, resultSetType);
     }
 
     public PreparedStatement prepareStatement(String sql, int resultSetType,
                                               int resultSetConcurrency)
             throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareStatementCommand(sql, resultSetType, resultSetConcurrency), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareStatementCommand(sql, resultSetType, resultSetConcurrency), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualPreparedStatement(reg, this, sql, _sink, resultSetType);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (PreparedStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualPreparedStatement(result, this, sql, _sink, resultSetType);
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType,
                                          int resultSetConcurrency) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareCallCommand(sql, resultSetType, resultSetConcurrency), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareCallCommand(sql, resultSetType, resultSetConcurrency), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualCallableStatement(reg, this, sql, _sink, resultSetType);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (CallableStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualCallableStatement(result, this, sql, _sink, resultSetType);
     }
 
     public Map getTypeMap() throws SQLException {
@@ -291,69 +280,70 @@ public class VirtualConnection extends VirtualBase implements Connection {
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency,
                                      int resultSetHoldability) throws SQLException {
-        Object result = _sink.queue(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "createStatement",
+        UIDEx result = _sink.queue(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "createStatement",
                 new Object[]{new Integer(resultSetType),
                              new Integer(resultSetConcurrency),
                              new Integer(resultSetHoldability)},
                 ParameterTypeCombinations.INTINTINT), true);
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualStatement(reg, this, _sink, resultSetType);
+
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (Statement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualStatement(result, this, _sink, resultSetType);
     }
 
     public PreparedStatement prepareStatement(String sql, int resultSetType,
                                               int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareStatementCommand(sql, resultSetType, resultSetConcurrency, resultSetHoldability), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareStatementCommand(sql, resultSetType, resultSetConcurrency, resultSetHoldability), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualPreparedStatement(reg, this, sql, _sink, resultSetType);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (PreparedStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualPreparedStatement(result, this, sql, _sink, resultSetType);
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType,
                                          int resultSetConcurrency,
                                          int resultSetHoldability) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareCallCommand(sql, resultSetType, resultSetConcurrency, resultSetHoldability), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareCallCommand(sql, resultSetType, resultSetConcurrency, resultSetHoldability), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualCallableStatement(reg, this, sql, _sink, resultSetType);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (CallableStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualCallableStatement(result, this, sql, _sink, resultSetType);
     }
 
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareStatementExtendedCommand(sql, autoGeneratedKeys), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareStatementExtendedCommand(sql, autoGeneratedKeys), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualPreparedStatement(reg, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (PreparedStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualPreparedStatement(result, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
     }
 
     public PreparedStatement prepareStatement(String sql, int columnIndexes[]) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareStatementExtendedCommand(sql, columnIndexes), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareStatementExtendedCommand(sql, columnIndexes), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualPreparedStatement(reg, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (PreparedStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualPreparedStatement(result, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
     }
 
     public PreparedStatement prepareStatement(String sql, String columnNames[]) throws SQLException {
-        Object result = _sink.queue(_objectUid, new ConnectionPrepareStatementExtendedCommand(sql, columnNames), true);
+        UIDEx result = _sink.queue(_objectUid, new ConnectionPrepareStatementExtendedCommand(sql, columnNames), true);
 
-        if (result instanceof UIDEx) {
-            UIDEx reg = (UIDEx)result;
-            return new VirtualPreparedStatement(reg, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
+        if (result == null) {
+            throw new SQLException("call returned null");
         }
-        return (PreparedStatement)proxyFactory.makeJdbcObject(result);
+
+        return new VirtualPreparedStatement(result, this, sql, _sink, ResultSet.TYPE_FORWARD_ONLY);
     }
 
     /* start JDBC4 support */

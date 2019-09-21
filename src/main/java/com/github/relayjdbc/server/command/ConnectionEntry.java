@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.github.relayjdbc.ProxiedObject;
 import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
@@ -276,9 +275,6 @@ class ConnectionEntry implements ConnectionContext {
                         
                         if (result instanceof DatabaseMetaData){
                         	return new SerialDatabaseMetaData(uidResult, (DatabaseMetaData) result);
-                        }                        
-                        if (result instanceof ProxiedObject) {
-                            return ((ProxiedObject)result).getProxy();
                         }
                         return uidResult;
                     } else {
