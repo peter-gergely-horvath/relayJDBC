@@ -30,7 +30,7 @@ class VJdbcConfigurationParser {
                 }
                 return configuration;
             } catch(Exception e) {
-                String msg = "VJdbc-Configuration failed";
+                String msg = "relayjdbc-configuration failed";
                 _logger.error(msg, e);
                 throw new ConfigurationException(msg, e);
             }        
@@ -54,7 +54,7 @@ class VJdbcConfigurationParser {
                 }
                 return configuration;
             } catch(Exception e) {
-                String msg = "VJdbc-Configuration failed";
+                String msg = "relayjdbc-configuration failed";
                 _logger.error(msg, e);
                 throw new ConfigurationException(msg, e);
             }
@@ -78,48 +78,48 @@ class VJdbcConfigurationParser {
 	
 	    digester.push(configuration);
 	
-	    digester.addObjectCreate("vjdbc-configuration/occt", DigesterOcctConfiguration.class);
-	    digester.addSetProperties("vjdbc-configuration/occt");
-	    digester.addSetNext("vjdbc-configuration/occt",
+	    digester.addObjectCreate("relayjdbc-configuration/occt", DigesterOcctConfiguration.class);
+	    digester.addSetProperties("relayjdbc-configuration/occt");
+	    digester.addSetNext("relayjdbc-configuration/occt",
 	            "setOcctConfiguration",
 	            OcctConfiguration.class.getName());
 	
-	    digester.addObjectCreate("vjdbc-configuration/rmi", DigesterRmiConfiguration.class);
-	    digester.addSetProperties("vjdbc-configuration/rmi");
-	    digester.addSetNext("vjdbc-configuration/rmi",
+	    digester.addObjectCreate("relayjdbc-configuration/rmi", DigesterRmiConfiguration.class);
+	    digester.addSetProperties("relayjdbc-configuration/rmi");
+	    digester.addSetNext("relayjdbc-configuration/rmi",
 	            "setRmiConfiguration",
 	            RmiConfiguration.class.getName());
 	
-	    digester.addObjectCreate("vjdbc-configuration/connection", DigesterConnectionConfiguration.class);
-	    digester.addSetProperties("vjdbc-configuration/connection");
-	    digester.addSetNext("vjdbc-configuration/connection",
+	    digester.addObjectCreate("relayjdbc-configuration/connection", DigesterConnectionConfiguration.class);
+	    digester.addSetProperties("relayjdbc-configuration/connection");
+	    digester.addSetNext("relayjdbc-configuration/connection",
 	            "addConnection",
 	            ConnectionConfiguration.class.getName());
 	
-	    digester.addObjectCreate("vjdbc-configuration/connection/connection-pool", ConnectionPoolConfiguration.class);
-	    digester.addSetProperties("vjdbc-configuration/connection/connection-pool");
-	    digester.addSetNext("vjdbc-configuration/connection/connection-pool",
+	    digester.addObjectCreate("relayjdbc-configuration/connection/connection-pool", ConnectionPoolConfiguration.class);
+	    digester.addSetProperties("relayjdbc-configuration/connection/connection-pool");
+	    digester.addSetNext("relayjdbc-configuration/connection/connection-pool",
 	            "setConnectionPoolConfiguration",
 	            ConnectionPoolConfiguration.class.getName());
 	
 	    // Named-Queries
-	    digester.addObjectCreate("vjdbc-configuration/connection/named-queries", NamedQueryConfiguration.class);
-	    digester.addCallMethod("vjdbc-configuration/connection/named-queries/entry", "addEntry", 2);
-	    digester.addCallParam("vjdbc-configuration/connection/named-queries/entry", 0, "id");
-	    digester.addCallParam("vjdbc-configuration/connection/named-queries/entry", 1);
-	    digester.addSetNext("vjdbc-configuration/connection/named-queries",
+	    digester.addObjectCreate("relayjdbc-configuration/connection/named-queries", NamedQueryConfiguration.class);
+	    digester.addCallMethod("relayjdbc-configuration/connection/named-queries/entry", "addEntry", 2);
+	    digester.addCallParam("relayjdbc-configuration/connection/named-queries/entry", 0, "id");
+	    digester.addCallParam("relayjdbc-configuration/connection/named-queries/entry", 1);
+	    digester.addSetNext("relayjdbc-configuration/connection/named-queries",
 	            "setNamedQueries",
 	            NamedQueryConfiguration.class.getName());
 	
 	    // Query-Filters
-	    digester.addObjectCreate("vjdbc-configuration/connection/query-filters", QueryFilterConfiguration.class);
-	    digester.addCallMethod("vjdbc-configuration/connection/query-filters/deny", "addDenyEntry", 2);
-	    digester.addCallParam("vjdbc-configuration/connection/query-filters/deny", 0);
-	    digester.addCallParam("vjdbc-configuration/connection/query-filters/deny", 1, "type");
-	    digester.addCallMethod("vjdbc-configuration/connection/query-filters/allow", "addAllowEntry", 2);
-	    digester.addCallParam("vjdbc-configuration/connection/query-filters/allow", 0);
-	    digester.addCallParam("vjdbc-configuration/connection/query-filters/allow", 1, "type");
-	    digester.addSetNext("vjdbc-configuration/connection/query-filters",
+	    digester.addObjectCreate("relayjdbc-configuration/connection/query-filters", QueryFilterConfiguration.class);
+	    digester.addCallMethod("relayjdbc-configuration/connection/query-filters/deny", "addDenyEntry", 2);
+	    digester.addCallParam("relayjdbc-configuration/connection/query-filters/deny", 0);
+	    digester.addCallParam("relayjdbc-configuration/connection/query-filters/deny", 1, "type");
+	    digester.addCallMethod("relayjdbc-configuration/connection/query-filters/allow", "addAllowEntry", 2);
+	    digester.addCallParam("relayjdbc-configuration/connection/query-filters/allow", 0);
+	    digester.addCallParam("relayjdbc-configuration/connection/query-filters/allow", 1, "type");
+	    digester.addSetNext("relayjdbc-configuration/connection/query-filters",
 	            "setQueryFilters",
 	            QueryFilterConfiguration.class.getName());
 	

@@ -209,15 +209,15 @@ Configuration of VJDBC is XML based. The XML structure is translated into config
 
 ::
 
-	<vjdbc-configuration>
+	<relayjdbc-configuration>
         <connection id="testdb" driver="sun.jdbc.odbc.JdbcOdbcDriver" url="jdbc:odbc:testdb"/>
-	</vjdbc-configuration>
+	</relayjdbc-configuration>
 
-There is the root element called ``<vjdbc-configuration>``. It can list as many connections as you want, each with its own set of properties. You can even mix the native drivers. A more complex example for a configuration:
+There is the root element called ``<relayjdbc-configuration>``. It can list as many connections as you want, each with its own set of properties. You can even mix the native drivers. A more complex example for a configuration:
 
 ::
 
-    <vjdbc-configuration>
+    <relayjdbc-configuration>
         <rmi objectName="VJdbc" port="1500" createRegistry="false"/>
         <connection
            id="MyDB"
@@ -236,7 +236,7 @@ There is the root element called ``<vjdbc-configuration>``. It can list as many 
            driver="com.mysql.jdbc.Driver"
            url="jdbc:mysql:///quiz">
         </connection>
-    </vjdbc-configuration>
+    </relayjdbc-configuration>
 
 Here you can see three parts.
 
@@ -433,7 +433,7 @@ Here is an example which covers the mentioned use case with the registry port + 
 
 ::
 
-    <vjdbc-configuration>
+    <relayjdbc-configuration>
         <rmi registryPort="${rmi.registryPort}" remotingPort="${rmi.remotingPort}"/>
         ...
 
@@ -530,7 +530,7 @@ By default VJDBC gets the connection to the backend database by using a standard
 
 Java 1.4 introduced the DataSource-API as an alternative. The DataSource-API is more flexible and easier to use in environments such as application servers or directory services.
 
-To get VJDBC working with the DataSource-API you need to provide a class that implements the DataSourceProvider interface. You must then specify this class in the VJDBC-Configuration. VJDBC will instantiate this class (thus it must have a constructor without parameters) and call the getDataSource() method to finally get the DataSource.
+To get VJDBC working with the DataSource-API you need to provide a class that implements the DataSourceProvider interface. You must then specify this class in the relayjdbc-configuration. VJDBC will instantiate this class (thus it must have a constructor without parameters) and call the getDataSource() method to finally get the DataSource.
 
 A simple example using HSQL-DB. First the very basic implementation of a DataSource class. This is just for demonstration purposes, you normally wouldn't implement this class but use the class provided by your database vendor.
 

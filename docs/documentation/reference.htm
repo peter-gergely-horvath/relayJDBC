@@ -587,13 +587,13 @@ expressions.</p>
 <h2><a class="toc-backref" href="#id21" id="id1" name="id1">3.1&nbsp;&nbsp;&nbsp;Introduction</a></h2>
 <p>Configuration of VJDBC is XML based. The XML structure is translated into configuration objects by Jakarta-Digester, so VJDBC can also be configured completely programatically (more on that topic later). Most of the properties you can use have meaningful default values. This is what the simplest configuration file can look like</p>
 <pre class="literal-block">
-&lt;vjdbc-configuration&gt;
+&lt;relayjdbc-configuration&gt;
 &lt;connection id=&quot;testdb&quot; driver=&quot;sun.jdbc.odbc.JdbcOdbcDriver&quot; url=&quot;jdbc:odbc:testdb&quot;/&gt;
-&lt;/vjdbc-configuration&gt;
+&lt;/relayjdbc-configuration&gt;
 </pre>
-<p>There is the root element called <tt class="docutils literal"><span class="pre">&lt;vjdbc-configuration&gt;</span></tt>. It can list as many connections as you want, each with its own set of properties. You can even mix the native drivers. A more complex example for a configuration:</p>
+<p>There is the root element called <tt class="docutils literal"><span class="pre">&lt;relayjdbc-configuration&gt;</span></tt>. It can list as many connections as you want, each with its own set of properties. You can even mix the native drivers. A more complex example for a configuration:</p>
 <pre class="literal-block">
-&lt;vjdbc-configuration&gt;
+&lt;relayjdbc-configuration&gt;
     &lt;rmi objectName=&quot;VJdbc&quot; port=&quot;1500&quot; createRegistry=&quot;false&quot;/&gt;
     &lt;connection
        id=&quot;MyDB&quot;
@@ -612,7 +612,7 @@ expressions.</p>
        driver=&quot;com.mysql.jdbc.Driver&quot;
        url=&quot;jdbc:mysql:///quiz&quot;&gt;
     &lt;/connection&gt;
-&lt;/vjdbc-configuration&gt;
+&lt;/relayjdbc-configuration&gt;
 </pre>
 <p>Here you can see three parts.</p>
 <p>The &lt;rmi&gt;-Part defines the RMI configuration where the VJdbc-Remote-Object will be registered at an existing RMI-Registry waiting on port 1500.</p>
@@ -788,7 +788,7 @@ is used</td></tr>
 <p>Often there is a need to replace several settings in the configuration file with values specified during the deployment process. For example, you develop and test with the RMI registry running on port 2000, but in production you must use 3000. Instead of maintaining two almost identical configuration files or doing some magic during the deployment process you can use configuration variables. Configuration variables are specified in a seperate properties file and can replace almost any value within the configuration file.</p>
 <p>Here is an example which covers the mentioned use case with the registry port + specifying a different remoting port.</p>
 <pre class="literal-block">
-&lt;vjdbc-configuration&gt;
+&lt;relayjdbc-configuration&gt;
     &lt;rmi registryPort=&quot;${rmi.registryPort}&quot; remotingPort=&quot;${rmi.remotingPort}&quot;/&gt;
     ...
 </pre>
@@ -872,7 +872,7 @@ public class CustomRmiServer {
 <h3><a class="toc-backref" href="#id27" id="using-datasources" name="using-datasources">3.6.1&nbsp;&nbsp;&nbsp;Using DataSources</a></h3>
 <p>By default VJDBC gets the connection to the backend database by using a standard JDBC-URL.</p>
 <p>Java 1.4 introduced the DataSource-API as an alternative. The DataSource-API is more flexible and easier to use in environments such as application servers or directory services.</p>
-<p>To get VJDBC working with the DataSource-API you need to provide a class that implements the DataSourceProvider interface. You must then specify this class in the VJDBC-Configuration. VJDBC will instantiate this class (thus it must have a constructor without parameters) and call the getDataSource() method to finally get the DataSource.</p>
+<p>To get VJDBC working with the DataSource-API you need to provide a class that implements the DataSourceProvider interface. You must then specify this class in the relayjdbc-configuration. VJDBC will instantiate this class (thus it must have a constructor without parameters) and call the getDataSource() method to finally get the DataSource.</p>
 <p>A simple example using HSQL-DB. First the very basic implementation of a DataSource class. This is just for demonstration purposes, you normally wouldn't implement this class but use the class provided by your database vendor.</p>
 <pre class="literal-block">
 /*

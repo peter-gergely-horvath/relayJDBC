@@ -1,4 +1,4 @@
-<vjdbc-configuration>
+<relayjdbc-configuration>
 	<connection
 		id="h2db"
 		driver="org.h2.Driver"
@@ -12,4 +12,4 @@
                    timeBetweenEvictionRunsMillis="5000"
                    minEvictableIdleTimeMillis="10000"/>
 	</connection>
-</vjdbc-configuration>
+</relayjdbc-configuration>

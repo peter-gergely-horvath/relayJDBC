@@ -1,4 +1,4 @@
-<vjdbc-configuration>
+<relayjdbc-configuration>
 	<connection 
 		id="HSqlDB" 
 		driver="org.hsqldb.jdbcDriver" 
@@ -17,4 +17,4 @@
                    timeBetweenEvictionRunsMillis="5000"
                    minEvictableIdleTimeMillis="10000"/>
 	</connection>
-</vjdbc-configuration>
+</relayjdbc-configuration>

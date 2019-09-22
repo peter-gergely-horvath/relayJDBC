@@ -29,9 +29,9 @@ Statement stmt = conn.createStatement();
   3. Before you can start the RMI-Server you must create a small XML file which contains the information about the ODBC-Datasource and the JDBC-Driver. So create a file called vjdbc_jdbcodbc.xml with this content:
 
 +----------------------------------------------------------------+
-<vjdbc-configuration>
+<relayjdbc-configuration>
   <connection id="testdb" driver="sun.jdbc.odbc.JdbcOdbcDriver" url="jdbc:odbc:testdb"/>
-</vjdbc-configuration>
+</relayjdbc-configuration>
 +----------------------------------------------------------------+
 
   That's it ! There are some more properties for configuration but the default values are sufficient for now.

@@ -57,7 +57,7 @@ public abstract class AbstractServletCommandSink extends HttpServlet {
                 // check if configuration is already initialized
                 VJdbcConfiguration.singleton(); // throws RuntimeException if not initialized
             } catch (RuntimeException e) {
-                String msg = "VJDBC-Configuration " + configResource + " not found !";
+                String msg = "relayjdbc-configuration " + configResource + " not found !";
                 _logger.error(msg);
                 throw new ServletException(msg);
             }
@@ -102,7 +102,7 @@ public abstract class AbstractServletCommandSink extends HttpServlet {
             }
 
             try {
-                _logger.info("Initialize VJDBC-Configuration");
+                _logger.info("Initialize relayjdbc-configuration");
                 VJdbcConfiguration.init(configResourceInputStream, configVariablesProps);
             } catch (ConfigurationException e) {
                 _logger.error("Initialization failed", e);
