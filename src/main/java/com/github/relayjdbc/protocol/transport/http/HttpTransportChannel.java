@@ -12,6 +12,8 @@ import java.net.URL;
 
 public class HttpTransportChannel implements TransportChannel {
 
+    private static final String METHOD_POST = "POST";
+
     private final URL _url;
     private final RequestEnhancer _requestEnhancer;
 
@@ -36,7 +38,7 @@ public class HttpTransportChannel implements TransportChannel {
         conn = (HttpURLConnection) _url.openConnection();
         conn.setDoOutput(true);
         conn.setDoInput(true);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(METHOD_POST);
         conn.setAllowUserInteraction(false); // system may not ask the user
         conn.setUseCaches(false);
         conn.setInstanceFollowRedirects(false);
@@ -52,7 +54,7 @@ public class HttpTransportChannel implements TransportChannel {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (conn != null) {
             conn.disconnect();
         }
