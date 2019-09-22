@@ -9,7 +9,7 @@ public class HSqlDbDynamicConfigurationServer {
     public static void main(String[] args) throws ConfigurationException, IOException {
 //        BasicConfigurator.configure();
 //        
-//        VJdbcConfiguration.init("test/vjdbc_config.xml");
+//        VJdbcConfiguration.init("test/relayjdbc-config.xml");
 //        
 //        ConnectionConfiguration dynCfg = new ConnectionConfiguration();
 //        dynCfg.setId("HSqlDB2");

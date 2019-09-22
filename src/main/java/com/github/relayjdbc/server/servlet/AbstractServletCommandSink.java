@@ -24,7 +24,7 @@ public abstract class AbstractServletCommandSink extends HttpServlet {
 
     public static final String INIT_PARAMETER_CONFIG_RESOURCE = "config-resource";
     protected static final String INIT_PARAMETER_CONFIG_VARIABLES = "config-variables";
-    protected static final String DEFAULT_CONFIG_RESOURCE = "/WEB-INF/vjdbc-config.xml";
+    protected static final String DEFAULT_CONFIG_RESOURCE = "/WEB-INF/relayjdbc-config.xml";
 
     protected CommandProcessor _processor;
     protected long emulatePingTime = 0L;

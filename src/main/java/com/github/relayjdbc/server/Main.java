@@ -1,44 +1,66 @@
 package com.github.relayjdbc.server;
 
-import com.github.relayjdbc.server.servlet.AbstractServletCommandSink;
-import com.github.relayjdbc.server.servlet.KryoServletCommandSink;
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
+import com.github.relayjdbc.server.base64pipe.Base64PipeServer;
+import com.github.relayjdbc.server.servlet.ServletMain;
 
-public class Main {
+public final class Main {
 
-    public static void main(String[] args) throws Exception {
+    private static final int EXIT_CODE_SERVER_START_FAILED = 1;
 
-        String serverPortString = args[0];
-        Integer serverPort = Integer.valueOf(serverPortString);
+    private Main() {
+        // no external instances
+    }
 
-        Server server = new Server();
+    public static void main(String[] args) {
 
-        ServletContextHandler context = new ServletContextHandler(server, "/",
-                ServletContextHandler.SESSIONS|ServletContextHandler.NO_SECURITY);
-        context.setResourceBase(".");
+        try {
+            if (args.length == 0) {
+                throw new IllegalArgumentException("At least one argument, server type is required");
+            }
 
-        context.addServlet(KryoServletCommandSink.class, "/")
-                .setInitParameter(AbstractServletCommandSink.INIT_PARAMETER_CONFIG_RESOURCE,"/vjdbc-config.xml");
-        server.setHandler(context);
+            String serverTypeString = args[0];
 
-        // HTTP Configuration
-        HttpConfiguration httpConfiguration = new HttpConfiguration();
-        httpConfiguration.setSecureScheme("https");
-        httpConfiguration.setSecurePort(8443);
-        httpConfiguration.setSendXPoweredBy(true);
-        httpConfiguration.setSendServerVersion(true);
+            ServerType serverType = ServerType.fromString(serverTypeString);
 
-        // HTTP Connector
-        ServerConnector http = new ServerConnector(server,new HttpConnectionFactory(httpConfiguration));
-        http.setPort(serverPort);
-        server.addConnector(http);
+            String[] serverMainArgs = dropServerType(args);
 
-        server.start();
-        // Wait for the server thread to stop (optional)
-        server.join();
+            switch (serverType) {
+                case SERVLET:
+                    ServletMain.main(serverMainArgs);
+
+                    break;
+
+
+                case BASE64_PIPE:
+                    Base64PipeServer.main(serverMainArgs);
+
+                    break;
+
+
+                default:
+                    throw new IllegalArgumentException("Unknown server type specified: " + serverType);
+            }
+
+
+        } catch (Exception ex) {
+            System.err.println("Server start failed");
+
+            ex.printStackTrace();
+
+            System.exit(EXIT_CODE_SERVER_START_FAILED);
+        }
+    }
+
+    private static String[] dropServerType(String[] args) {
+
+        if(args.length == 1) {
+            return new String[0];
+        }
+
+        String[] serverArgs = new String[args.length - 1];
+
+        System.arraycopy(args, 1, serverArgs, 0, args.length - 1);
+
+        return serverArgs;
     }
 }
