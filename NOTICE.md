@@ -27,7 +27,7 @@ of claiming credits of the work done by the original developer. Instead,
 we consider Git SCM change logs as the best way to identify the creator of
 certain code sections. All original code sections are respectfully credited
 to the original VJDBC project and developer, Michael Link. For all code
-sections, where there is other Git SCM log indication of changes are to be
+sections where there is no other Git SCM log indication of changes, are to be
 attributed according to the original source file notice:
 ```
 VJDBC - Virtual JDBC
