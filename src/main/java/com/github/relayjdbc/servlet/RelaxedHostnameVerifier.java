@@ -1,7 +1,3 @@
-// VJDBC - Virtual JDBC
-// Written by Michael Link
-// Website: http://vjdbc.sourceforge.net
-
 package com.github.relayjdbc.servlet;
 
 import javax.net.ssl.HostnameVerifier;

@@ -1,7 +1,3 @@
-// VJDBC - Virtual JDBC
-// Written by Michael Link
-// Website: http://vjdbc.sourceforge.net
-
 package com.github.relayjdbc.test.junit.oracle;
 
 import com.github.relayjdbc.test.junit.general.AddressTest;

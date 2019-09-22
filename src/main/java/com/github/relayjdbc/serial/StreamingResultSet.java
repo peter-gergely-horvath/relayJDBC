@@ -1,7 +1,3 @@
-// VJDBC - Virtual JDBC
-// Written by Michael Link
-// Website: http://vjdbc.sourceforge.net
-
 package com.github.relayjdbc.serial;
 
 import com.github.relayjdbc.command.*;
