@@ -1,4 +1,4 @@
-package com.github.relayjdbc.transport;
+package com.github.relayjdbc.protocol.transport;
 
 import java.io.IOException;
 import java.io.InputStream;

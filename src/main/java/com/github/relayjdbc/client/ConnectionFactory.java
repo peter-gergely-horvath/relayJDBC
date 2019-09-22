@@ -4,15 +4,15 @@ import com.github.relayjdbc.RelayDriver;
 import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.VirtualConnection;
 import com.github.relayjdbc.command.*;
-import com.github.relayjdbc.protocol.kryo.KryoProtocol;
-import com.github.relayjdbc.protocol.kryo.KryoProtocolConstants;
+import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormat;
+import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormatConstants;
 import com.github.relayjdbc.serial.CallingContext;
 import com.github.relayjdbc.serial.UIDEx;
 import com.github.relayjdbc.servlet.RequestEnhancer;
 import com.github.relayjdbc.servlet.RequestEnhancerFactory;
-import com.github.relayjdbc.transport.Transport;
-import com.github.relayjdbc.transport.http.HttpTransport;
-import com.github.relayjdbc.transport.ssh.SshPipeTransport;
+import com.github.relayjdbc.protocol.transport.Transport;
+import com.github.relayjdbc.protocol.transport.http.HttpTransport;
+import com.github.relayjdbc.protocol.transport.ssh.SshPipeTransport;
 import com.github.relayjdbc.util.ClientInfo;
 import com.github.relayjdbc.util.StringUtils;
 import org.apache.commons.logging.Log;
@@ -92,22 +92,22 @@ public final class ConnectionFactory {
 
         Transport transport = new HttpTransport(new URL(url), requestEnhancer);
 
-        KryoProtocol protocol = new KryoProtocol(
-                        KryoProtocolConstants.DEFAULT_COMPRESSION_MODE,
-                        KryoProtocolConstants.DEFAULT_COMPRESSION_THRESHOLD);
+        KryoDataFormat protocol = new KryoDataFormat(
+                        KryoDataFormatConstants.DEFAULT_COMPRESSION_MODE,
+                        KryoDataFormatConstants.DEFAULT_COMPRESSION_THRESHOLD);
 
 
-        return new GenericClient(transport, protocol);
+        return new DefaultClient(transport, protocol);
     }
 
     private static CommandSink createSshPipeCommandSink(String url, Properties props) throws Exception {
 
-        KryoProtocol protocol = new KryoProtocol(
-                        KryoProtocolConstants.DEFAULT_COMPRESSION_MODE,
-                        KryoProtocolConstants.DEFAULT_COMPRESSION_THRESHOLD);
+        KryoDataFormat protocol = new KryoDataFormat(
+                        KryoDataFormatConstants.DEFAULT_COMPRESSION_MODE,
+                        KryoDataFormatConstants.DEFAULT_COMPRESSION_THRESHOLD);
 
         SshPipeTransport sshPipeTransport = new SshPipeTransport(url, props);
 
-        return new GenericClient(sshPipeTransport, protocol);
+        return new DefaultClient(sshPipeTransport, protocol);
     }
 }

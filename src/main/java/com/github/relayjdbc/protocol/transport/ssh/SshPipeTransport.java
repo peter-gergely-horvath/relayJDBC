@@ -1,9 +1,9 @@
-package com.github.relayjdbc.transport.ssh;
+package com.github.relayjdbc.protocol.transport.ssh;
 
 import com.github.relayjdbc.server.base64pipe.CloseSuppressingInputStreamWrapper;
 import com.github.relayjdbc.server.base64pipe.CloseSuppressingOutputStreamWrapper;
-import com.github.relayjdbc.transport.Transport;
-import com.github.relayjdbc.transport.TransportChannel;
+import com.github.relayjdbc.protocol.transport.Transport;
+import com.github.relayjdbc.protocol.transport.TransportChannel;
 import com.github.relayjdbc.util.StreamCloser;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;

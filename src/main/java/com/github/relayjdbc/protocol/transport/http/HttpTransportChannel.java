@@ -1,8 +1,8 @@
-package com.github.relayjdbc.transport.http;
+package com.github.relayjdbc.protocol.transport.http;
 
 import com.github.relayjdbc.servlet.RequestEnhancer;
 import com.github.relayjdbc.servlet.kryo.KryoRequestModifier;
-import com.github.relayjdbc.transport.TransportChannel;
+import com.github.relayjdbc.protocol.transport.TransportChannel;
 
 import java.io.IOException;
 import java.io.InputStream;

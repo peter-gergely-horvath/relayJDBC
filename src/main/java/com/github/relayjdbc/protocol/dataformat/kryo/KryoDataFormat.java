@@ -1,18 +1,18 @@
-package com.github.relayjdbc.protocol.kryo;
+package com.github.relayjdbc.protocol.dataformat.kryo;
 
-import com.github.relayjdbc.protocol.Decoder;
-import com.github.relayjdbc.protocol.Encoder;
-import com.github.relayjdbc.protocol.Protocol;
+import com.github.relayjdbc.protocol.dataformat.Decoder;
+import com.github.relayjdbc.protocol.dataformat.Encoder;
+import com.github.relayjdbc.protocol.dataformat.DataFormat;
 import com.github.relayjdbc.util.KryoFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class KryoProtocol implements Protocol {
+public class KryoDataFormat implements DataFormat {
 
     private final AtomicInteger compressionMode;
     private final AtomicInteger compressionThreshold;
 
-    public KryoProtocol(int compressionMode, int compressionThreshold) {
+    public KryoDataFormat(int compressionMode, int compressionThreshold) {
         this.compressionMode = new AtomicInteger(compressionMode);
         this.compressionThreshold = new AtomicInteger(compressionThreshold);
     }

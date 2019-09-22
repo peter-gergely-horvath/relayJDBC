@@ -1,6 +1,6 @@
-package com.github.relayjdbc.transport.ssh;
+package com.github.relayjdbc.protocol.transport.ssh;
 
-import com.github.relayjdbc.transport.TransportChannel;
+import com.github.relayjdbc.protocol.transport.TransportChannel;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

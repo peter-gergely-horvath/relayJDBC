@@ -6,7 +6,7 @@ import com.github.relayjdbc.VJdbcException;
 import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
-import com.github.relayjdbc.protocol.ProtocolConstants;
+import com.github.relayjdbc.protocol.dataformat.ProtocolConstants;
 import com.github.relayjdbc.serial.CallingContext;
 import com.github.relayjdbc.server.command.CommandProcessor;
 import com.github.relayjdbc.server.config.ConnectionConfiguration;
@@ -85,20 +85,20 @@ public class CommandDispatcher {
         try {
             String magic = kryo.readObject(input, String.class);
             if (!ProtocolConstants.MAGIC.equals(magic)) {
-                logger.warn("Protocol error: magic not found, but was: " + magic);
-                throw new RuntimeException("Protocol error: magic not found, but was: " + magic);
+                logger.warn("DataFormat error: magic not found, but was: " + magic);
+                throw new RuntimeException("DataFormat error: magic not found, but was: " + magic);
             }
 
             String clientVersion = kryo.readObject(input, String.class);
             if (!KryoServletCommandSink.PROTOCOL_VERSION.equals(clientVersion)) {
-                String errorMsg = String.format("Protocol version mismatch: expected %s but was %s",
+                String errorMsg = String.format("DataFormat version mismatch: expected %s but was %s",
                         KryoServletCommandSink.PROTOCOL_VERSION, clientVersion);
                 logger.warn(errorMsg);
                 throw new RuntimeException(errorMsg);
             }
         } catch (Exception ex) {
             logger.warn("Handshake failed", ex);
-            throw new RuntimeException("Protocol error: Handshake failed", ex);
+            throw new RuntimeException("DataFormat error: Handshake failed", ex);
         }
 
         logger.info("header OK");

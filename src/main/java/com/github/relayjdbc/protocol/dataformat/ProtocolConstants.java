@@ -1,4 +1,4 @@
-package com.github.relayjdbc.protocol;
+package com.github.relayjdbc.protocol.dataformat;
 
 public class ProtocolConstants {
 

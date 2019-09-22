@@ -1,4 +1,4 @@
-package com.github.relayjdbc.protocol.kryo;
+package com.github.relayjdbc.protocol.dataformat.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.github.relayjdbc.util.KryoFactory;

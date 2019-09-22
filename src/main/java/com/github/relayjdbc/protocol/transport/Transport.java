@@ -1,11 +1,9 @@
-package com.github.relayjdbc.transport;
+package com.github.relayjdbc.protocol.transport;
 
 import java.io.IOException;
 
 public interface Transport {
     TransportChannel getTransportChannel() throws IOException;
 
-    default void close() {
-        // do nothing
-    }
+    void close();
 }

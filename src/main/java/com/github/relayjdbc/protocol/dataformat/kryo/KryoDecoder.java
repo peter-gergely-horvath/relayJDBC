@@ -1,6 +1,6 @@
-package com.github.relayjdbc.protocol.kryo;
+package com.github.relayjdbc.protocol.dataformat.kryo;
 
-import com.github.relayjdbc.protocol.Decoder;
+import com.github.relayjdbc.protocol.dataformat.Decoder;
 import com.github.relayjdbc.util.InflatingInput;
 import com.github.relayjdbc.util.KryoFactory;
 

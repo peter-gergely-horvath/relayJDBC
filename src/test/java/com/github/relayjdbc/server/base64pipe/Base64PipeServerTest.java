@@ -1,9 +1,10 @@
 package com.github.relayjdbc.server.base64pipe;
 
-import com.github.relayjdbc.protocol.Decoder;
-import com.github.relayjdbc.protocol.Encoder;
-import com.github.relayjdbc.protocol.kryo.KryoProtocol;
-import com.github.relayjdbc.protocol.kryo.KryoProtocolConstants;
+import com.github.relayjdbc.protocol.dataformat.Decoder;
+import com.github.relayjdbc.protocol.dataformat.Encoder;
+import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormat;
+import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormatConstants;
+import com.github.relayjdbc.protocol.messages.ConnectionRequest;
 import com.github.relayjdbc.serial.CallingContext;
 import com.github.relayjdbc.server.config.ConfigurationException;
 import com.github.relayjdbc.util.ClientInfo;
@@ -77,19 +78,17 @@ public class Base64PipeServerTest {
             }
         });
 
-        KryoProtocol protocol =
-                new KryoProtocol(KryoProtocolConstants.DEFAULT_COMPRESSION_MODE,
-                        KryoProtocolConstants.DEFAULT_COMPRESSION_THRESHOLD);
+        KryoDataFormat protocol =
+                new KryoDataFormat(KryoDataFormatConstants.DEFAULT_COMPRESSION_MODE,
+                        KryoDataFormatConstants.DEFAULT_COMPRESSION_THRESHOLD);
 
         Encoder protocolEncoder = protocol.getProtocolEncoder();
 
         Decoder protocolDecoder = protocol.getProtocolDecoder();
 
-        protocolEncoder.writeConnect(clientWriter,
-                "h2db",
-                new Properties(),
-                ClientInfo.getProperties("user.name"),
-                new CallingContext());
+        ConnectionRequest connectionRequest = new ConnectionRequest("h2db", new Properties(),
+                ClientInfo.getProperties("user.name"), new CallingContext());
+        protocolEncoder.encode(clientWriter, connectionRequest);
 
         Thread.sleep(5000);
 

@@ -10,11 +10,13 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import com.github.relayjdbc.command.CommandSink;
-import com.github.relayjdbc.protocol.Decoder;
-import com.github.relayjdbc.protocol.Encoder;
-import com.github.relayjdbc.protocol.Protocol;
-import com.github.relayjdbc.transport.Transport;
-import com.github.relayjdbc.transport.TransportChannel;
+import com.github.relayjdbc.protocol.dataformat.DataFormat;
+import com.github.relayjdbc.protocol.dataformat.Decoder;
+import com.github.relayjdbc.protocol.dataformat.Encoder;
+import com.github.relayjdbc.protocol.messages.ExecuteCommandRequest;
+import com.github.relayjdbc.protocol.messages.ConnectionRequest;
+import com.github.relayjdbc.protocol.transport.Transport;
+import com.github.relayjdbc.protocol.transport.TransportChannel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,28 +29,29 @@ import com.github.relayjdbc.server.config.ConfigurationException;
 import com.github.relayjdbc.util.PerformanceConfig;
 import com.github.relayjdbc.util.SQLExceptionHelper;
 
-public class GenericClient implements CommandSink {
-    private static Log _logger = LogFactory.getLog(GenericClient.class);
+class DefaultClient implements CommandSink {
+    private static Log _logger = LogFactory.getLog(DefaultClient.class);
 
-    private final Protocol protocol;
+    private final DataFormat dataFormat;
     private final Transport transport;
 
-    public GenericClient(
+    DefaultClient(
             Transport transport,
-            Protocol protocol) throws SQLException {
-        this.protocol = protocol;
+            DataFormat dataFormat) {
+        this.dataFormat = dataFormat;
         this.transport = transport;
     }
 
     public UIDEx connect(String database, Properties props, Properties clientInfo, CallingContext ctx) throws SQLException {
 
         try (TransportChannel transportChannel = transport.getTransportChannel();
-             Encoder encoder = protocol.getProtocolEncoder();
-             Decoder decoder = protocol.getProtocolDecoder()) {
+             Encoder encoder = dataFormat.getProtocolEncoder();
+             Decoder decoder = dataFormat.getProtocolDecoder()) {
 
             OutputStream outputStream = transportChannel.getOutputStream();
 
-            encoder.writeConnect(outputStream, database, props, clientInfo, ctx);
+            ConnectionRequest connectionRequest = new ConnectionRequest(database, props, clientInfo, ctx);
+            encoder.encode(outputStream, connectionRequest);
 
             InputStream inputStream = transportChannel.sendAndWaitForResponse();
 
@@ -75,8 +78,8 @@ public class GenericClient implements CommandSink {
             final int newCompressionMode = PerformanceConfig.getCompressionMode(performanceProfile);
             final int newCompressionThreshold = PerformanceConfig.getCompressionThreshold(performanceProfile);
 
-            protocol.setCompressionMode(newCompressionMode);
-            protocol.setCompressionThreshold(newCompressionThreshold);
+            dataFormat.setCompressionMode(newCompressionMode);
+            dataFormat.setCompressionThreshold(newCompressionThreshold);
 
         } catch (ConfigurationException e) {
             _logger.debug("Invalid compression mode", e);
@@ -90,12 +93,13 @@ public class GenericClient implements CommandSink {
         }
 
         try (TransportChannel transportChannel = transport.getTransportChannel();
-             Encoder encoder = protocol.getProtocolEncoder();
-             Decoder decoder = protocol.getProtocolDecoder()) {
+             Encoder encoder = dataFormat.getProtocolEncoder();
+             Decoder decoder = dataFormat.getProtocolDecoder()) {
 
             OutputStream outputStream = transportChannel.getOutputStream();
 
-            encoder.writePerform(outputStream, connuid, uid, cmd, ctx);
+            ExecuteCommandRequest executeCommandRequest = new ExecuteCommandRequest(connuid, uid, cmd, ctx);
+            encoder.encode(outputStream, executeCommandRequest);
 
             InputStream inputStream = transportChannel.sendAndWaitForResponse();
 
@@ -126,8 +130,8 @@ public class GenericClient implements CommandSink {
                 final int newCompressionMode = PerformanceConfig.getCompressionMode(performanceProfile);
                 final int newCompressionThreshold = PerformanceConfig.getCompressionThreshold(performanceProfile);
 
-                protocol.setCompressionMode(newCompressionMode);
-                protocol.setCompressionThreshold(newCompressionThreshold);
+                dataFormat.setCompressionMode(newCompressionMode);
+                dataFormat.setCompressionThreshold(newCompressionThreshold);
 
             } catch (NumberFormatException e) {
                 _logger.debug("Ignoring invalid number format for performance profile", e);
@@ -138,7 +142,7 @@ public class GenericClient implements CommandSink {
             try {
                 final int newCompressionMode = PerformanceConfig.parseCompressionMode(value);
 
-                protocol.setCompressionMode(newCompressionMode);
+                dataFormat.setCompressionMode(newCompressionMode);
 
             } catch (ConfigurationException e) {
                 _logger.debug("Ignoring invalid compression mode", e);
@@ -147,7 +151,7 @@ public class GenericClient implements CommandSink {
             try {
                 final int newCompressionThreshold = PerformanceConfig.parseCompressionThreshold(value);
 
-                protocol.setCompressionThreshold(newCompressionThreshold);
+                dataFormat.setCompressionThreshold(newCompressionThreshold);
             } catch (ConfigurationException e) {
                 _logger.debug("Ignoring invalid compression threshold", e);
             }

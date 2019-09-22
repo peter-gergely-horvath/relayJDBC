@@ -1,6 +1,6 @@
-package com.github.relayjdbc.protocol;
+package com.github.relayjdbc.protocol.dataformat;
 
-public interface Protocol {
+public interface DataFormat {
     Encoder getProtocolEncoder();
 
     Decoder getProtocolDecoder();

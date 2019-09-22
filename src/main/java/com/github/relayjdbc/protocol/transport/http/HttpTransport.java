@@ -1,8 +1,8 @@
-package com.github.relayjdbc.transport.http;
+package com.github.relayjdbc.protocol.transport.http;
 
 import com.github.relayjdbc.servlet.RequestEnhancer;
-import com.github.relayjdbc.transport.Transport;
-import com.github.relayjdbc.transport.TransportChannel;
+import com.github.relayjdbc.protocol.transport.Transport;
+import com.github.relayjdbc.protocol.transport.TransportChannel;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,5 +22,9 @@ public class HttpTransport implements Transport {
         HttpTransportChannel httpTransportChannel = new HttpTransportChannel(_url, _requestEnhancer);
 
         return httpTransportChannel;
+    }
+
+    public void close() {
+        // do nothing
     }
 }
