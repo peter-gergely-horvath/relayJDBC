@@ -244,7 +244,7 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
         columnIndex--;
         _lastReadColumn = columnIndex;
         BigDecimal result = _columnValues[columnIndex].getBigDecimal(_cursor);
-        result.setScale(scale);
+        result = result.setScale(scale);
 		return result;
     }
 
