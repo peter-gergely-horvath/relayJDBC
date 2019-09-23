@@ -1,5 +1,6 @@
 package com.github.relayjdbc.server.base64pipe;
 
+import com.github.relayjdbc.protocol.dataformat.DecodeException;
 import com.github.relayjdbc.protocol.dataformat.Decoder;
 import com.github.relayjdbc.protocol.dataformat.Encoder;
 import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormat;
@@ -39,7 +40,7 @@ public class Base64PipeServerTest {
     }
 
     @Test(timeout = 15000)
-    public void testServer() throws IOException, ConfigurationException, InterruptedException {
+    public void testServer() throws IOException, ConfigurationException, InterruptedException, DecodeException {
 
         Pipe stdInPipe = Pipe.open();
         Pipe stdOutPipe = Pipe.open();

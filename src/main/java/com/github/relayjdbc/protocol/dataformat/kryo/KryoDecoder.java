@@ -1,5 +1,7 @@
 package com.github.relayjdbc.protocol.dataformat.kryo;
 
+import com.esotericsoftware.kryo.KryoException;
+import com.github.relayjdbc.protocol.dataformat.DecodeException;
 import com.github.relayjdbc.protocol.dataformat.Decoder;
 import com.github.relayjdbc.util.InflatingInput;
 import com.github.relayjdbc.util.KryoFactory;
@@ -13,9 +15,11 @@ class KryoDecoder extends KryoSupport implements Decoder {
     }
 
     @Override
-    public Object readObject(InputStream is) {
+    public Object readObject(InputStream is) throws DecodeException {
         try (InflatingInput input = new InflatingInput(is)) {
             return kryo.readClassAndObject(input);
+        } catch (KryoException ex) {
+            throw new DecodeException("Failed to decode: " + ex.getMessage(), ex);
         }
     }
 }
