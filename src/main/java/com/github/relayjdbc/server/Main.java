@@ -1,7 +1,7 @@
 package com.github.relayjdbc.server;
 
-import com.github.relayjdbc.server.base64pipe.Base64PipeServer;
-import com.github.relayjdbc.server.servlet.ServletMain;
+import com.github.relayjdbc.server.base64pipe.Base64PipeServerMain;
+import com.github.relayjdbc.server.servlet.HttpServerMain;
 
 public final class Main {
 
@@ -25,14 +25,14 @@ public final class Main {
             String[] serverMainArgs = dropServerType(args);
 
             switch (serverType) {
-                case SERVLET:
-                    ServletMain.main(serverMainArgs);
+                case HTTP:
+                    HttpServerMain.main(serverMainArgs);
 
                     break;
 
 
                 case BASE64_PIPE:
-                    Base64PipeServer.main(serverMainArgs);
+                    Base64PipeServerMain.main(serverMainArgs);
 
                     break;
 

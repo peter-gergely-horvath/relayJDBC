@@ -9,12 +9,12 @@ import java.io.*;
 import java.util.Base64;
 import java.util.Properties;
 
-public class Base64PipeServer {
+public class Base64PipeServerMain {
 
-    private static Log logger = LogFactory.getLog(Base64PipeServer.class);
+    private static Log logger = LogFactory.getLog(Base64PipeServerMain.class);
 
     public static void main(String[] args) throws IOException, ConfigurationException {
-        new Base64PipeServer().runApp(args);
+        new Base64PipeServerMain().runApp(args);
     }
 
     protected void runApp(String[] args) throws IOException, ConfigurationException {
