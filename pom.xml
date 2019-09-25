@@ -4,7 +4,7 @@
   <groupId>com.github</groupId>
   <artifactId>relay-jdbc</artifactId>
   <packaging>jar</packaging>
-  <version>2.13</version>
+  <version>3.0.0</version>
   <name>relay-jdbc JDBC driver</name>
   <url>https://github.com/peter-gergely-horvath/relay-jdbc</url>
   <description>
