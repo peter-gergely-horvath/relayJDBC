@@ -3,6 +3,8 @@ package com.github.relayjdbc.serial;
 
 public class ObjectColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private Object[] values;
 	
 	ObjectColumnValues(Class componentType, Object[] values) {

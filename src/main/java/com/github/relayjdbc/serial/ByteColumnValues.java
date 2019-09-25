@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class ByteColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private byte[] values;
 	private int[] nullFlags = null;
 

@@ -2,6 +2,8 @@ package com.github.relayjdbc.serial;
 
 public class BooleanColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private int[] values = null;
 	private int[] nullFlags = null;
 	

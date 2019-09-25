@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class LongColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private long[] values = null;
 	private int[] nullFlags = null;
 	

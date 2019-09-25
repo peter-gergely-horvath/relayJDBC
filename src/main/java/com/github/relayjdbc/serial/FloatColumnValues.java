@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class FloatColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private float[] values = null;
 	private int[] nullFlags = null;
 

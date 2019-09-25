@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -36,27 +37,37 @@ public class ClientInfo {
 
         try {
             // Deliver local host information
-            InetAddress iadr = InetAddress.getLocalHost();
-            properties.put(RELAY_CLIENT_ADDRESS, iadr.getHostAddress());
-            properties.put(RELAY_CLIENT_NAME, iadr.getHostName());
+            tryAddHostInfoToProperties(properties);
 
             // Split the passed string into pieces and put all system properties
             // into the Properties object
             if(propertiesToTransfer != null) {
                 // Use StringTokenizer here, split-Method is only available in JDK 1.4
-                StringTokenizer tok = new StringTokenizer(propertiesToTransfer, ";");
-                while(tok.hasMoreTokens()) {
-                    String key = tok.nextToken();
-                    String value = System.getProperty(key);
-                    if(value != null) {
-                        properties.put(key, value);
+                StringTokenizer tokenizer = new StringTokenizer(propertiesToTransfer, ";");
+                while(tokenizer.hasMoreTokens()) {
+                    String key = tokenizer.nextToken();
+                    if (!"".equals(key.trim())) {
+                        String value = System.getProperty(key);
+                        if(value != null) {
+                            properties.put(key, value);
+                        }
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (SecurityException e) {
             _logger.info("Access-Exception, System-Properties can't be delivered to the server");
         }
 
         return properties;
+    }
+
+    private static void tryAddHostInfoToProperties(Properties properties) {
+        try {
+            InetAddress localAddress = InetAddress.getLocalHost();
+            properties.put(RELAY_CLIENT_ADDRESS, localAddress.getHostAddress());
+            properties.put(RELAY_CLIENT_NAME, localAddress.getHostName());
+        } catch (UnknownHostException e) {
+            _logger.info("UnknownHostException: host information can't be delivered to the server");
+        }
     }
 }

@@ -433,7 +433,6 @@ public class VirtualConnection extends VirtualBase implements Connection {
     }
 
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        Properties clientProps = ClientInfo.getProperties(null);
         Iterator it = properties.keySet().iterator();
         while (it.hasNext()) {
             String key = (String)it.next();
@@ -460,7 +459,7 @@ public class VirtualConnection extends VirtualBase implements Connection {
 
     public Properties getClientInfo() throws SQLException {
         Properties clientProps = ClientInfo.getProperties(null);
-        if (clientProps != null && clientProps.size() > 1) {
+        if (clientProps.size() > 1) {
             return clientProps;
         }
         Properties ret = (Properties)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "getClientInfo"));

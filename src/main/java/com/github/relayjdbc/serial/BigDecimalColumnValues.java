@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class BigDecimalColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private BigDecimal[] values;
 
 	BigDecimalColumnValues(BigDecimal[] values) {

@@ -5,6 +5,7 @@
 package com.github.relayjdbc.serial;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLXML;
 import java.sql.SQLException;
@@ -49,12 +50,18 @@ public class SerialSQLXML implements SQLXML, Externalizable {
 
     public <T extends Source> T getSource(Class<T> sourceClass) throws SQLException {
         try {
+
             Constructor<T> constructor =
                 sourceClass.getConstructor(InputSource.class);
             return constructor.newInstance(new InputSource(getCharacterStream()));
-        } catch (Exception e) {
+
+        } catch (RuntimeException
+                | InstantiationException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | IllegalAccessException e) {
+            throw new SQLException("Failure getting source", e);
         }
-        return null;
     }
 
     public String getString() throws SQLException {

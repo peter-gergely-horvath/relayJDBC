@@ -37,8 +37,18 @@
         <!-- New Kryo serializer is used: we should get rid of Externalizable -->
     </Match>
 
+    <Match>
+        <Class name="com.github.relayjdbc.serial.SerialResultSetMetaData" />
+        <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+        <!-- Inherited Legacy method contract: we do not want to change it -->
+    </Match>
 
 
+    <Match>
+        <Class name="com.github.relayjdbc.serial.StreamSerializer" />
+        <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+        <!-- Inherited Legacy method contract: we do not want to change it -->
+    </Match>
 
     <Match>
         <Class name="com.github.relayjdbc.cache.TableCache" />
