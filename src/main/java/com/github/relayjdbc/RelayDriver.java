@@ -36,13 +36,13 @@ public final class RelayDriver implements Driver {
             } catch (ClassNotFoundException e) {
                 logger.info("Couldn't load HSQL-Driver, caching deactivated");
                 cacheEnabled = false;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 logger.error("Unexpected exception occured on loading the HSQL-Driver");
                 cacheEnabled = false;
             }
-        } catch (Exception e) {
-            logger.fatal("Couldn't register RelayDriver JDBC-Driver !", e);
-            throw new RuntimeException("Couldn't register RelayDriver JDBC-Driver !", e);
+        } catch (Throwable t) {
+            logger.fatal("Couldn't register RelayDriver JDBC-Driver !", t);
+            throw new RuntimeException("Couldn't register RelayDriver JDBC-Driver !", t);
         }
     }
 

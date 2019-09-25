@@ -58,8 +58,27 @@
     </Match>
 
     <Match>
+        <Class name="com.github.relayjdbc.VirtualCallableStatement" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+        <!-- Existing legacy dispatching code we do not want to touch -->
+    </Match>
+
+    <Match>
+        <Class name="com.github.relayjdbc.server.config.ConnectionConfiguration" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+        <!-- Existing legacy code we do not want to touch -->
+    </Match>
+
+    <Match>
+        <Class name="com.github.relayjdbc.server.config.VJdbcConfigurationParser" />
+        <Method name="parse" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+        <!-- Existing legacy code we do not want to touch -->
+    </Match>
+
+
+    <Match>
         <Bug pattern="NM_CONFUSING" />
-        <!-- This class is used for configuration binding -->
     </Match>
 
     <Match>
