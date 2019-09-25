@@ -13,6 +13,8 @@ import com.esotericsoftware.kryo.io.Output;
 
 public class ConnectionSetClientInfoCommand implements Command,Serializable, KryoSerializable {
 
+	public static final long serialVersionUID = 1;
+
 	private String _name;
 	private String _value;
 	

@@ -18,22 +18,6 @@ public class BigDecimalColumnValues extends ColumnValues {
 		values = new BigDecimal[initialSize];
 	}
 
-	private final void ensureCapacity(int minCapacity) {
-		if (size < minCapacity) {
-			size = minCapacity;
-		}
-		int oldCapacity = values.length;
-		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
-			BigDecimal[] tmpValues = values;
-			values = new BigDecimal[newCapacity];
-			System.arraycopy(tmpValues, 0, values, 0, oldCapacity);
-		}
-	}
-
 	@Override
 	final void setIsNull(int index) {
 		values[index] = null;

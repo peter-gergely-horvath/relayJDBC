@@ -18,7 +18,10 @@ public class VirtualConnection extends VirtualBase implements Connection {
     private static Log _logger = LogFactory.getLog(VirtualConnection.class);
 
     private static TableCache s_tableCache;
-    private boolean _cachingEnabled = false;
+    private static final Object tableCacheLockObject = new Object();
+
+    private volatile boolean _cachingEnabled;
+
     private Boolean _isAutoCommit = null;
     private Properties _connectionProperties;
     protected DatabaseMetaData _databaseMetaData;
@@ -48,21 +51,23 @@ public class VirtualConnection extends VirtualBase implements Connection {
         PreparedStatement pstmt = null;
 
         if(_cachingEnabled) {
-            if(s_tableCache == null) {
-                String cachedTables = _connectionProperties.getProperty(VJdbcProperties.CACHE_TABLES);
+            synchronized (tableCacheLockObject) {
+                if(s_tableCache == null) {
+                    String cachedTables = _connectionProperties.getProperty(RelayJdbcProperties.CACHE_TABLES);
 
-                if(cachedTables != null) {
-                    try {
-                        s_tableCache = new TableCache(this, cachedTables);
-                    } catch(SQLException e) {
-                        _logger.error("Creation of table cache failed, disable caching", e);
-                        _cachingEnabled = false;
+                    if(cachedTables != null) {
+                        try {
+                            s_tableCache = new TableCache(this, cachedTables);
+                        } catch(SQLException e) {
+                            _logger.error("Creation of table cache failed, disable caching", e);
+                            _cachingEnabled = false;
+                        }
                     }
                 }
-            }
 
-            if(s_tableCache != null) {
-                pstmt = s_tableCache.getPreparedStatement(sql);
+                if(s_tableCache != null) {
+                    pstmt = s_tableCache.getPreparedStatement(sql);
+                }
             }
         }
 
@@ -96,15 +101,14 @@ public class VirtualConnection extends VirtualBase implements Connection {
     public void setAutoCommit(boolean autoCommit) throws SQLException {
     	_sink.process(_objectUid, new ConnectionSetAutoCommitCommand(autoCommit));
         // Remember the auto-commit value to prevent unnecessary remote calls
-        _isAutoCommit = Boolean.valueOf(autoCommit);
+        _isAutoCommit = autoCommit;
     }
 
     public boolean getAutoCommit() throws SQLException {
         if(_isAutoCommit == null) {
-        	boolean autoCommit = _sink.processWithBooleanResult(_objectUid, new ConnectionGetAutoCommitCommand());
-            _isAutoCommit = Boolean.valueOf(autoCommit);
+            _isAutoCommit = _sink.processWithBooleanResult(_objectUid, new ConnectionGetAutoCommitCommand());
         }
-        return _isAutoCommit.booleanValue();
+        return _isAutoCommit;
     }
 
     public void commit() throws SQLException {
@@ -165,7 +169,7 @@ public class VirtualConnection extends VirtualBase implements Connection {
 
     public void setTransactionIsolation(int level) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "setTransactionIsolation",
-                new Object[]{new Integer(level)},
+                new Object[]{Integer.valueOf(level)},
                 ParameterTypeCombinations.INT));
     }
 
@@ -199,7 +203,7 @@ public class VirtualConnection extends VirtualBase implements Connection {
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
         UIDEx result = _sink.queue(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "createStatement",
-                new Object[]{new Integer(resultSetType), new Integer(resultSetConcurrency)},
+                new Object[]{Integer.valueOf(resultSetType), Integer.valueOf(resultSetConcurrency)},
                 ParameterTypeCombinations.INTINT), true);
 
         if (result == null) {
@@ -244,7 +248,7 @@ public class VirtualConnection extends VirtualBase implements Connection {
 
     public void setHoldability(int holdability) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "setHoldability",
-                new Object[]{new Integer(holdability)},
+                new Object[]{Integer.valueOf(holdability)},
                 ParameterTypeCombinations.INT));
     }
 
@@ -277,9 +281,9 @@ public class VirtualConnection extends VirtualBase implements Connection {
     public Statement createStatement(int resultSetType, int resultSetConcurrency,
                                      int resultSetHoldability) throws SQLException {
         UIDEx result = _sink.queue(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CONNECTION, "createStatement",
-                new Object[]{new Integer(resultSetType),
-                             new Integer(resultSetConcurrency),
-                             new Integer(resultSetHoldability)},
+                new Object[]{Integer.valueOf(resultSetType),
+                             Integer.valueOf(resultSetConcurrency),
+                             Integer.valueOf(resultSetHoldability)},
                 ParameterTypeCombinations.INTINTINT), true);
 
         if (result == null) {
@@ -396,7 +400,9 @@ public class VirtualConnection extends VirtualBase implements Connection {
 	        while (!task.finished && diff > 0) {
 	            try {
 	                Thread.sleep(diff);
-	            } catch (Exception e) {
+	            } catch (InterruptedException e) {
+	                Thread.currentThread().interrupt();
+	                throw new SQLException("Interrupted", e);
 	            }
 	            diff = end - System.currentTimeMillis();
 	        }
@@ -410,7 +416,7 @@ public class VirtualConnection extends VirtualBase implements Connection {
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
         Properties clientProps = ClientInfo.getProperties(null);
         clientProps.put(name, value);
-        if (ClientInfo.VJDBC_FAST_UPDATE.equals(name)){
+        if (ClientInfo.RELAY_FAST_UPDATE.equals(name)){
         	return;
         }
         try {

@@ -3,7 +3,7 @@ package com.github.relayjdbc.server;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.github.relayjdbc.VJdbcException;
-import com.github.relayjdbc.VJdbcProperties;
+import com.github.relayjdbc.RelayJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
 import com.github.relayjdbc.protocol.dataformat.ProtocolConstants;
@@ -139,9 +139,9 @@ public class CommandDispatcher {
         }
 
         Connection conn = connectionConfiguration.create(props);
-        Object userName = props.get(VJdbcProperties.USER_NAME);
+        Object userName = props.get(RelayJdbcProperties.USER_NAME);
         if (userName != null) {
-            clientInfo.put(VJdbcProperties.USER_NAME, userName);
+            clientInfo.put(RelayJdbcProperties.USER_NAME, userName);
         }
         return commandProcessor.registerConnection(conn, connectionConfiguration, clientInfo, ctx);
 

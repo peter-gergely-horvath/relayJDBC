@@ -1,7 +1,7 @@
 package com.github.relayjdbc.client;
 
 import com.github.relayjdbc.RelayDriver;
-import com.github.relayjdbc.VJdbcProperties;
+import com.github.relayjdbc.RelayJdbcProperties;
 import com.github.relayjdbc.VirtualConnection;
 import com.github.relayjdbc.command.*;
 import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormat;
@@ -61,7 +61,7 @@ public final class ConnectionFactory {
         UIDEx reg = sink.connect(
                 urlparts[1],
                 props,
-                ClientInfo.getProperties(props.getProperty(VJdbcProperties.CLIENTINFO_PROPERTIES)),
+                ClientInfo.getProperties(props.getProperty(RelayJdbcProperties.CLIENTINFO_PROPERTIES)),
                 new CallingContext());
 
         CallingContextFactory ctxFactory;
@@ -80,7 +80,7 @@ public final class ConnectionFactory {
     private static CommandSink createServletCommandSink(String url, Properties props) throws Exception {
         RequestEnhancer requestEnhancer = null;
 
-        String requestEnhancerFactoryClassName = props.getProperty(VJdbcProperties.SERVLET_REQUEST_ENHANCER_FACTORY);
+        String requestEnhancerFactoryClassName = props.getProperty(RelayJdbcProperties.SERVLET_REQUEST_ENHANCER_FACTORY);
 
         if(requestEnhancerFactoryClassName != null) {
             _logger.debug("Found RequestEnhancerFactory class: " + requestEnhancerFactoryClassName);

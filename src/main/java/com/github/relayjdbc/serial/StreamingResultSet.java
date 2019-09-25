@@ -981,26 +981,6 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
     	return false;
     }
 
-    private Date getCleanDate(long millis) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(millis);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return new Date(cal.getTimeInMillis());
-    }
-
-    private Time getCleanTime(long millis) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(millis);
-        cal.set(Calendar.YEAR, 1970);
-        cal.set(Calendar.MONTH, Calendar.JANUARY);
-        cal.set(Calendar.DATE, 1);
-        cal.set(Calendar.MILLISECOND, 0);
-        return new Time(cal.getTimeInMillis());
-    }
-
     /* start JDBC4 support */
     public RowId getRowId(int columnIndex) throws SQLException {
         columnIndex--;

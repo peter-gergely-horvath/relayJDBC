@@ -29,7 +29,7 @@ public class ConnectionReleaseSavepointCommand implements Command, KryoSerializa
     }
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        _uidOfSavepoint = new Long(in.readLong());
+        _uidOfSavepoint = Long.valueOf(in.readLong());
     }
 
     public Object execute(Object target, ConnectionContext ctx) throws SQLException {

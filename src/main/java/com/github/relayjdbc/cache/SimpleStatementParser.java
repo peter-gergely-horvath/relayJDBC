@@ -2,6 +2,7 @@ package com.github.relayjdbc.cache;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 class SimpleStatementParser {
@@ -18,7 +19,7 @@ class SimpleStatementParser {
             }
         }
         // Now parse the string for the used tables
-        String sqlLowerCase = sql.toLowerCase();
+        String sqlLowerCase = sql.toLowerCase(Locale.ENGLISH);
         int selectPos = sqlLowerCase.indexOf("select");
 
         // Any SELECT-Portion ?
@@ -39,9 +40,9 @@ class SimpleStatementParser {
                         int spacePos = part.indexOf(' ');
                         if(spacePos >= 0) {
                             String table = part.substring(0, spacePos);
-                            result.add(table.toLowerCase());
+                            result.add(table.toLowerCase(Locale.ENGLISH));
                         } else {
-                            result.add(part.toLowerCase());
+                            result.add(part.toLowerCase(Locale.ENGLISH));
                         }
                     }
 
@@ -68,7 +69,7 @@ class SimpleStatementParser {
                         tableName = sql.substring(joinPos + 6);
                     }
 
-                    result.add(tableName.toLowerCase());
+                    result.add(tableName.toLowerCase(Locale.ENGLISH));
 
                     joinStartPos = joinPos2;
                 } else {

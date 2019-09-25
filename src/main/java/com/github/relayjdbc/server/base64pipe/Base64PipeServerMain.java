@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Properties;
 
@@ -37,12 +38,14 @@ public class Base64PipeServerMain {
 
         StreamServer streamServer = new StreamServer(configFileInputStream, properties);
 
-        try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getStdIn()));
-            PrintWriter response = new PrintWriter(getStdOut())) {
+        try(BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(getStdIn(), StandardCharsets.UTF_8));
+            PrintWriter responseWriter =
+                    new PrintWriter(new OutputStreamWriter(getStdOut(), StandardCharsets.UTF_8), true)) {
 
             while(!Thread.currentThread().isInterrupted()) {
                 logger.info("Awaiting console input");
-                String lineRead = bufferedReader.readLine();
+                String lineRead = reader.readLine();
                 logger.info("Read line from input: " + lineRead);
 
                 if (lineRead == null) {
@@ -63,8 +66,8 @@ public class Base64PipeServerMain {
                 String responseEncoded = Base64.getEncoder().encodeToString(responseBytes);
 
                 logger.info("Writing response: " + responseEncoded);
-                response.println(responseEncoded);
-                response.flush();
+                responseWriter.println(responseEncoded);
+                responseWriter.flush();
             }
         }
 

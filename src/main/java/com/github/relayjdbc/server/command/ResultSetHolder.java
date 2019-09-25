@@ -117,7 +117,7 @@ public class ResultSetHolder {
                             } finally {
                                 _readerThreadIsRunning = false;
                                 // Notify possibly waiting subsequent Readers
-                                _lock.notify();
+                                _lock.notifyAll();
                             }
                         }
                     }

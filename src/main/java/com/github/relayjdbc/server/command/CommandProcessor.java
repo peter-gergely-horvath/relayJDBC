@@ -38,7 +38,6 @@ import com.github.relayjdbc.util.SQLExceptionHelper;
  */
 public class CommandProcessor {
     private static Log _logger = LogFactory.getLog(CommandProcessor.class);
-    private static CommandProcessor _singleton;
 
     private static boolean closeConnectionsOnKill = true;
     private Timer _timer = null;
@@ -46,12 +45,29 @@ public class CommandProcessor {
     private OcctConfiguration _occtConfig;
 
     public static CommandProcessor getInstance() {
-        if(_singleton == null) {
-            _singleton = new CommandProcessor();
-            installShutdownHook();
-        }
-        return _singleton;
+        return LazyHolder.INSTANCE;
     }
+
+    private static final class LazyHolder {
+        private static final CommandProcessor INSTANCE = initializeCommandProcessor();
+
+        private static CommandProcessor initializeCommandProcessor() {
+            CommandProcessor commandProcessor = new CommandProcessor();
+            installShutdownHook(commandProcessor);
+
+            return commandProcessor;
+        }
+
+        private static void installShutdownHook(CommandProcessor instance) {
+            // Install the shutdown hook
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                public void run() {
+                    instance.destroy();
+                }
+            }));
+        }
+    }
+
 
     public static void setDontCloseConnectionsOnKill()
     {
@@ -72,14 +88,7 @@ public class CommandProcessor {
         }
     }
 
-    private static void installShutdownHook() {
-        // Install the shutdown hook
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-                getInstance().destroy();
-            }
-        }));
-    }
+
 
     public UIDEx createConnection(String url, Properties props, Properties clientInfo, CallingContext ctx) throws SQLException {
         ConnectionConfiguration connectionConfiguration = VJdbcConfiguration.singleton().getConnection(url);
@@ -163,7 +172,6 @@ public class CommandProcessor {
         } else {
             _connectionEntries.clear();
         }
-        _singleton = null;
 
         _logger.info("CommandProcessor successfully destroyed");
     }

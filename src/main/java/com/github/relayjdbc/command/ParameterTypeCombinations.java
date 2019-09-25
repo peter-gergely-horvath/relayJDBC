@@ -12,8 +12,8 @@ import java.util.Map;
  * This class holds an array of class arrays which can be efficiently used for Reflection
  * on the serverside by just transporting the array identifier instead of big objects.
  */
-public class ParameterTypeCombinations {
-    public static final Class[][] _typeCombinations = new Class[][]{
+public final class ParameterTypeCombinations {
+    static final Class[][] _typeCombinations = new Class[][]{
         new Class[0], // 0
         new Class[]{Boolean.TYPE}, // 1
         new Class[]{Integer.TYPE}, // 2
@@ -105,4 +105,8 @@ public class ParameterTypeCombinations {
     public static final int STRSTRSTRBOLBOL = 37;
     // Six
     public static final int STRSTRSTRSTRSTRSTR = 38;
+
+    static Class[] getByIndex(int number) {
+        return _typeCombinations[number];
+    }
 }

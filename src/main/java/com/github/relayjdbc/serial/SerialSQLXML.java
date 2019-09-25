@@ -5,8 +5,10 @@
 package com.github.relayjdbc.serial;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLXML;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Map;
 import java.lang.reflect.Constructor;
 
@@ -38,7 +40,7 @@ public class SerialSQLXML implements SQLXML, Externalizable {
     }
 
     public InputStream getBinaryStream() throws SQLException {
-        return new ByteArrayInputStream(xml.toString().getBytes());
+        return new ByteArrayInputStream(xml.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     public Reader getCharacterStream() throws SQLException {

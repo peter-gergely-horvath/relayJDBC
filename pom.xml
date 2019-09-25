@@ -5,7 +5,7 @@
   <artifactId>relay-jdbc</artifactId>
   <packaging>jar</packaging>
   <version>2.13</version>
-  <name>relay-jdbc JDBC driver (http transport only)</name>
+  <name>relay-jdbc JDBC driver</name>
   <url>https://github.com/peter-gergely-horvath/relay-jdbc</url>
   <description>
     relay-jdbc allows a JDBC connection to be relayed through an intermediate
@@ -21,6 +21,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+
+    <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
+    <xml-maven-plugin.version>1.0</xml-maven-plugin.version>
+    <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
   </properties>
 
     <repositories>
@@ -89,7 +93,94 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${spotbugs-maven-plugin.version}</version>
+        <configuration>
+          <!-- Enables analysis which takes more memory but finds more bugs.
+              If you run out of memory, changes the value of the effort element to 'Low'. -->
+          <effort>Max</effort>
 
+          <!-- Location of SpotBugs exclude filter file -->
+          <excludeFilterFile>build-config/spotbugs-exclude.xml</excludeFilterFile>
+
+
+          <!-- Build shall fail if problems are found -->
+          <failOnError>true</failOnError>
+
+          <!-- Reports all bugs (other values are medium and max) -->
+          <threshold>Low</threshold>
+
+          <!-- Produces XML report -->
+          <xmlOutput>true</xmlOutput>
+
+          <!-- Configures the directory in which the XML report is created -->
+          <spotbugsXmlOutputDirectory>${project.build.directory}/sportbugs</spotbugsXmlOutputDirectory>
+        </configuration>
+        <executions>
+          <!-- Ensures that FindBugs inspects source code when project is compiled. -->
+          <execution>
+            <id>analyze-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <version>${xml-maven-plugin.version}</version>
+        <configuration>
+          <transformationSets>
+            <transformationSet>
+              <!-- Configures the source directory of XML files. -->
+              <dir>${project.build.directory}/sportbugs</dir>
+              <includes>
+                <!-- only transform findbugsXml.xml to generate FindBugs HTML report -->
+                <include>spotbugsXml.xml</include>
+              </includes>
+
+              <!-- Configures the directory in which the FindBugs report is written. -->
+              <outputDir>${project.build.directory}/sportbugs</outputDir>
+
+              <!-- Selects the used stylesheet. -->
+              <!-- <stylesheet>fancy-hist.xsl</stylesheet> -->
+              <!--<stylesheet>default.xsl</stylesheet> -->
+              <!--<stylesheet>plain.xsl</stylesheet> -->
+              <stylesheet>fancy.xsl</stylesheet>
+              <!--<stylesheet>summary.xsl</stylesheet> -->
+              <fileMappers>
+                <!-- Configures the file extension of the output files. -->
+                <fileMapper
+                        implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                  <targetExtension>.html</targetExtension>
+                </fileMapper>
+              </fileMappers>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+        <executions>
+          <!-- Ensures that the XSLT transformation is run when the project
+              is compiled. -->
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>3.1.12</version>
+          </dependency>
+        </dependencies>
+      </plugin>
 
       <!-- plugin>
         <groupId>org.codehaus.mojo</groupId>

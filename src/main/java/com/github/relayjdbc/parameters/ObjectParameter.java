@@ -67,16 +67,19 @@ public class ObjectParameter implements PreparedStatementParameter {
 
     public void setParameter(PreparedStatement pstmt, int index) throws SQLException {
         switch (_argsCount) {
-		case 1:
-			pstmt.setObject(index, _value);
-			break;
-		case 2:
-			pstmt.setObject(index, _value, _targetSqlType);
-			break;
-		case 3:
-			pstmt.setObject(index, _value, _targetSqlType, _scale);
-			break;
-		}
+            case 1:
+                pstmt.setObject(index, _value);
+                break;
+            case 2:
+                pstmt.setObject(index, _value, _targetSqlType);
+                break;
+            case 3:
+                pstmt.setObject(index, _value, _targetSqlType, _scale);
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected argsCount=" + _argsCount);
+        }
     }
 
     public String toString() {

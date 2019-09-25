@@ -13,7 +13,7 @@ public class UIDEx implements Externalizable {
     /**
      * negative values are reserved for usage in CompositeCommand
      */
-    private Long _uid = new Long(s_cookie.getAndIncrement() & 0x7FFFFFFFFFFFFFFFL);
+    private Long _uid = Long.valueOf(s_cookie.getAndIncrement() & 0x7FFFFFFFFFFFFFFFL);
     private int _value1 = Integer.MIN_VALUE;
     private int _value2 = Integer.MIN_VALUE;
 
@@ -87,7 +87,7 @@ public class UIDEx implements Externalizable {
     }
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        _uid = new Long(in.readLong());
+        _uid = Long.valueOf(in.readLong());
         _value1 = in.readInt();
         _value2 = in.readInt();
     }

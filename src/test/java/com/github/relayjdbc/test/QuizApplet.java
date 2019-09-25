@@ -56,7 +56,7 @@ public class QuizApplet extends Applet {
     private class HighscoreEntry {
         HighscoreEntry(String user, int correctanswers) {
             _user = user;
-            _correctAnswers = new Integer(correctanswers);
+            _correctAnswers = Integer.valueOf(correctanswers);
         }
 
         String _user;

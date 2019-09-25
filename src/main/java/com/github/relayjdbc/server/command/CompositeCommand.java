@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
@@ -65,36 +67,18 @@ public class CompositeCommand  implements Command, Externalizable {
 			System.arraycopy(_futureResults, 0, r, 0, _futureResults.length);
 			_futureResults = r;
 		}
-		// optimization: if closing object that is not created yet, then remove all commands related to this object
-//		if (command instanceof DestroyCommand && reg!=null && reg.getUID()<0L){
-//			int s=0, d=0;
-//			while (s<_size){	
-//				if (_uidexs[s]==reg || _futureResults[s]==reg){
-//					s++;
-//					continue;
-//				}
-//				if (s!=d){
-//					_commands[d] = _commands[s];
-//					_uidexs[d] = _uidexs[s];
-//					_futureResults[d] = _futureResults[s];
-//				}
-//				s++;
-//				d++;
-//			}
-//			_size = d;
-//			return null;
-//		} 
+
 		_uidexs[_size] = reg;
 		_commands[_size] = command;		
 		return _futureResults[_size] = new UIDEx(Long.valueOf(-(++_size)), Integer.MIN_VALUE, Integer.MAX_VALUE); 
 	}
 	
-	public int size(){
+	public synchronized int size(){
 		return _size;
 	}
 	
 	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
+	public synchronized void writeExternal(ObjectOutput out) throws IOException {
 		out.writeInt(_size);
 		for (int i=0; i<_size; i++){
 			out.writeObject(_uidexs[i]);
@@ -103,7 +87,7 @@ public class CompositeCommand  implements Command, Externalizable {
 	}
 
 	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+	public synchronized void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		int _size = in.readInt();
 		_commands = new Command[_size];
 		_uidexs = new UIDEx[_size];
@@ -114,7 +98,7 @@ public class CompositeCommand  implements Command, Externalizable {
 	}
 
 	@Override
-	public Object execute(Object target, ConnectionContext ctx) throws SQLException {
+	public synchronized Object execute(Object target, ConnectionContext ctx) throws SQLException {
 		Object [] result = new Object[_size];
 		for (int i=0; i<_size; i++){
 			Long uid = null;
@@ -140,7 +124,7 @@ public class CompositeCommand  implements Command, Externalizable {
 	 * converting them to real ones on client side. 
 	 * @param results
 	 */
-	public void updateResultUIDEx(Object [] results) {
+	public synchronized void updateResultUIDEx(Object [] results) {
 		assert results!=null : CompositeCommand.class + " nevere returns null result";
 		if (_futureResults!=null){
 			for (int i=0; i<_size && i<results.length; i++){
@@ -151,11 +135,11 @@ public class CompositeCommand  implements Command, Externalizable {
 		}
 	}
 
-	Command[] getCommands() {
+	synchronized Command[] getCommands() {
 		return _commands;
 	}
 
-	UIDEx[] getUIDExs() {
+	synchronized UIDEx[] getUIDExs() {
 		return _uidexs;
 	}
 }

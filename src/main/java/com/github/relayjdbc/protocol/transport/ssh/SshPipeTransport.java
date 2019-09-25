@@ -33,7 +33,6 @@ public class SshPipeTransport implements Transport {
 
 
     private final String url;
-    private final Properties properties;
 
     private final Session session;
 
@@ -45,7 +44,6 @@ public class SshPipeTransport implements Transport {
     public SshPipeTransport(String urlString, Properties properties) {
         try {
             this.url = urlString;
-            this.properties = properties;
 
             final String user = getRequiredProperty(properties, SSH_USERNAME);
             final String password = getRequiredProperty(properties, SSH_PASSWORD);
@@ -107,8 +105,12 @@ public class SshPipeTransport implements Transport {
     }
 
     @Override
-    public TransportChannel getTransportChannel() throws IOException {
+    public TransportChannel getTransportChannel() {
         return sshTransportChannel;
     }
 
+    @Override
+    public String toString() {
+        return "SshPipeTransport{" + "url='" + url + "' }";
+    }
 }

@@ -6,7 +6,7 @@ import java.io.ObjectOutput;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import com.github.relayjdbc.VJdbcProperties;
+import com.github.relayjdbc.RelayJdbcProperties;
 
 public class DatabaseMetaDataGetUserNameCommand implements Command {
 
@@ -25,7 +25,7 @@ public class DatabaseMetaDataGetUserNameCommand implements Command {
 	}
 
 	public Object execute(Object target, ConnectionContext ctx) throws SQLException {
-		Object userName = ctx.getClientInfo().get(VJdbcProperties.USER_NAME);
+		Object userName = ctx.getClientInfo().get(RelayJdbcProperties.USER_NAME);
 		if (userName==null || "".equals(userName)){
 			userName = ((DatabaseMetaData)target).getUserName();
 		}

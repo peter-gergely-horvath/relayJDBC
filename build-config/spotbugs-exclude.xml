@@ -1,0 +1,70 @@
+<FindBugsFilter>
+    <!--
+        This file lists issues FindBug should not report as bugs.
+    -->
+    <Match>
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <!-- Ignore all dynamic SQL errors -->
+    </Match>
+    <Match>
+        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" />
+        <!-- Ignore all dynamic SQL errors -->
+    </Match>
+
+    <Match>
+        <Or>
+            <Class name="~com\.github\.relayjdbc\.serial.*\.*" />
+            <Or>
+                <Class name="~com\.github\.relayjdbc\.parameters.*\.*" />
+                <Class name="~com\.github\.relayjdbc\.command.*\.*" />
+            </Or>
+        </Or>
+        <Or>
+            <Bug pattern="EI_EXPOSE_REP" />
+            <Bug pattern="EI_EXPOSE_REP2" />
+        </Or>
+        <!-- These classes are practically just DTO classes -->
+    </Match>
+
+    <Match>
+        <Or>
+            <Or>
+                <Class name="~com\.github\.relayjdbc\.serial.*\.*" />
+                <Class name="~com\.github\.relayjdbc\.command.*\.*" />
+            </Or>
+        </Or>
+        <Bug pattern="SE_NO_SUITABLE_CONSTRUCTOR_FOR_EXTERNALIZATION" />
+        <!-- New Kryo serializer is used: we should get rid of Externalizable -->
+    </Match>
+
+
+
+
+    <Match>
+        <Class name="com.github.relayjdbc.cache.TableCache" />
+        <Method name="&lt;init&gt;" />
+        <Bug pattern="DMI_EMPTY_DB_PASSWORD" />
+        <!-- This is an in-memory database used for caching -->
+    </Match>
+
+    <Match>
+        <Bug pattern="NM_CONFUSING" />
+        <!-- This class is used for configuration binding -->
+    </Match>
+
+    <Match>
+        <Class name="com.github.relayjdbc.cache.TableCache" />
+        <Method name="refreshCacheEntry" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <!-- Existing code generates SQL statements -->
+    </Match>
+
+    <Match>
+        <Class name="com.github.relayjdbc.cache.TableCache" />
+        <Method name="createCacheEntry" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <!-- Existing code generates SQL statements -->
+    </Match>
+
+
+</FindBugsFilter>

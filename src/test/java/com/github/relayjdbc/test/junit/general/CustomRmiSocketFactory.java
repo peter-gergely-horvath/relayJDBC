@@ -14,7 +14,7 @@ public class CustomRmiSocketFactory extends RMISocketFactory {
     public CustomRmiSocketFactory(int from, int to) {
         if(from <= to) {
             for(int port = from; port <= to; ++port) {
-                _availablePorts.add(new Integer(port));
+                _availablePorts.add(Integer.valueOf(port));
             }
         } else {
             throw new IllegalArgumentException("Invalid Port-Range");
@@ -38,6 +38,6 @@ public class CustomRmiSocketFactory extends RMISocketFactory {
     }
 
     public void giveBack(int port) {
-        _availablePorts.add(new Integer(port));
+        _availablePorts.add(Integer.valueOf(port));
     }
 }

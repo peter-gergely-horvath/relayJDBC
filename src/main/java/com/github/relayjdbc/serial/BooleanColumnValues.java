@@ -20,26 +20,6 @@ public class BooleanColumnValues extends ColumnValues {
 		nullFlags = new int[size];
 	}
 
-	private final void ensureCapacity(int minCapacity) {
-		if (size<minCapacity){
-			size = minCapacity;
-		}		
-		int oldCapacity = values.length;
-		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
-			int[] tmpValues = values;
-			values = new int[(newCapacity >> 5) + 1];
-			System.arraycopy(tmpValues, 0, values, 0, oldCapacity);
-
-			int[] tmpNullFlags = nullFlags;
-			nullFlags = new int[(newCapacity >> 5) + 1];
-			System.arraycopy(tmpNullFlags, 0, nullFlags, 0, oldCapacity);
-		}
-	}
-
 	@Override
 	final void setIsNull(int index) {
 		int i = index >> 5;

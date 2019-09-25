@@ -21,14 +21,19 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
     }
 
     protected void finalize() throws Throwable {
-        close();
+        try {
+            close();
+        } catch (Throwable ignoredThrowable) {
+            // ignore
+        }
+        super.finalize();
     }
 
     public void registerOutParameter(int parameterIndex, int sqlType)
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT,
                 "registerOutParameter",
-                new Object[]{new Integer(parameterIndex), new Integer(sqlType)},
+                new Object[]{Integer.valueOf(parameterIndex), Integer.valueOf(sqlType)},
                 ParameterTypeCombinations.INTINT));
     }
 
@@ -36,9 +41,9 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT,
                 "registerOutParameter",
-                new Object[]{new Integer(parameterIndex),
-                             new Integer(sqlType),
-                             new Integer(scale)},
+                new Object[]{Integer.valueOf(parameterIndex),
+                             Integer.valueOf(sqlType),
+                             Integer.valueOf(scale)},
                 ParameterTypeCombinations.INTINTINT));
     }
 
@@ -48,81 +53,81 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
 
     public String getString(int parameterIndex) throws SQLException {
         return (String)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getString",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public boolean getBoolean(int parameterIndex) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getBoolean",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public byte getByte(int parameterIndex) throws SQLException {
         return _sink.processWithByteResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getByte",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public short getShort(int parameterIndex) throws SQLException {
         return _sink.processWithShortResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getShort",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public int getInt(int parameterIndex) throws SQLException {
         return _sink.processWithIntResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getInt",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public long getLong(int parameterIndex) throws SQLException {
         return _sink.processWithLongResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getLong",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public float getFloat(int parameterIndex) throws SQLException {
         return _sink.processWithFloatResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getFloat",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public double getDouble(int parameterIndex) throws SQLException {
         return _sink.processWithDoubleResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getDouble",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public BigDecimal getBigDecimal(int parameterIndex, int scale)
             throws SQLException {
         return (BigDecimal)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getBigDecimal",
-                new Object[]{new Integer(parameterIndex), new Integer(scale)},
+                new Object[]{Integer.valueOf(parameterIndex), Integer.valueOf(scale)},
                 ParameterTypeCombinations.INTINT));
     }
 
     public byte[] getBytes(int parameterIndex) throws SQLException {
         return (byte[])_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getBytes",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public Date getDate(int parameterIndex) throws SQLException {
         return (Date)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getDate",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public Time getTime(int parameterIndex) throws SQLException {
         return (Time)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getTime",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
     public Timestamp getTimestamp(int parameterIndex)
             throws SQLException {
         return (Timestamp)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getTimestamp",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
@@ -138,7 +143,7 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
 
     public BigDecimal getBigDecimal(int parameterIndex) throws SQLException {
         return (BigDecimal)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getBigDecimal",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
@@ -189,55 +194,55 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
     public Date getDate(int parameterIndex, Calendar cal)
             throws SQLException {
         return (Date)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getDate",
-                new Object[]{new Integer(parameterIndex), cal},
+                new Object[]{Integer.valueOf(parameterIndex), cal},
                 ParameterTypeCombinations.INTCAL));
     }
 
     public Time getTime(int parameterIndex, Calendar cal)
             throws SQLException {
         return (Time)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getTime",
-                new Object[]{new Integer(parameterIndex), cal},
+                new Object[]{Integer.valueOf(parameterIndex), cal},
                 ParameterTypeCombinations.INTCAL));
     }
 
     public Timestamp getTimestamp(int parameterIndex, Calendar cal)
             throws SQLException {
         return (Timestamp)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getTimestamp",
-                new Object[]{new Integer(parameterIndex), cal},
+                new Object[]{Integer.valueOf(parameterIndex), cal},
                 ParameterTypeCombinations.INTCAL));
     }
 
     public void registerOutParameter(int paramIndex, int sqlType, String typeName)
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "registerOutParameter",
-                new Object[]{new Integer(paramIndex), new Integer(sqlType), typeName},
+                new Object[]{Integer.valueOf(paramIndex), Integer.valueOf(sqlType), typeName},
                 ParameterTypeCombinations.INTINTSTR));
     }
 
     public void registerOutParameter(String parameterName, int sqlType)
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "registerOutParameter",
-                new Object[]{parameterName, new Integer(sqlType)},
+                new Object[]{parameterName, Integer.valueOf(sqlType)},
                 ParameterTypeCombinations.STRINT));
     }
 
     public void registerOutParameter(String parameterName, int sqlType, int scale)
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "registerOutParameter",
-                new Object[]{parameterName, new Integer(sqlType), new Integer(scale)},
+                new Object[]{parameterName, Integer.valueOf(sqlType), Integer.valueOf(scale)},
                 ParameterTypeCombinations.STRINTINT));
     }
 
     public void registerOutParameter(String parameterName, int sqlType, String typeName)
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "registerOutParameter",
-                new Object[]{parameterName, new Integer(sqlType), typeName},
+                new Object[]{parameterName, Integer.valueOf(sqlType), typeName},
                 ParameterTypeCombinations.STRINTSTR));
     }
 
     public URL getURL(int parameterIndex) throws SQLException {
         return (URL)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getURL",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
@@ -249,7 +254,7 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
 
     public void setNull(String parameterName, int sqlType) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setNull",
-                new Object[]{parameterName, new Integer(sqlType)},
+                new Object[]{parameterName, Integer.valueOf(sqlType)},
                 ParameterTypeCombinations.STRINT));
     }
 
@@ -261,37 +266,37 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
 
     public void setByte(String parameterName, byte x) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setByte",
-                new Object[]{parameterName, new Byte(x)},
+                new Object[]{parameterName, Byte.valueOf(x)},
                 ParameterTypeCombinations.STRBYT));
     }
 
     public void setShort(String parameterName, short x) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setShort",
-                new Object[]{parameterName, new Short(x)},
+                new Object[]{parameterName, Short.valueOf(x)},
                 ParameterTypeCombinations.STRSHT));
     }
 
     public void setInt(String parameterName, int x) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setInt",
-                new Object[]{parameterName, new Integer(x)},
+                new Object[]{parameterName, Integer.valueOf(x)},
                 ParameterTypeCombinations.STRINT));
     }
 
     public void setLong(String parameterName, long x) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setLong",
-                new Object[]{parameterName, new Long(x)},
+                new Object[]{parameterName, Long.valueOf(x)},
                 ParameterTypeCombinations.STRLNG));
     }
 
     public void setFloat(String parameterName, float x) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setFloat",
-                new Object[]{parameterName, new Float(x)},
+                new Object[]{parameterName, Float.valueOf(x)},
                 ParameterTypeCombinations.STRFLT));
     }
 
     public void setDouble(String parameterName, double x) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setDouble",
-                new Object[]{parameterName, new Double(x)},
+                new Object[]{parameterName, Double.valueOf(x)},
                 ParameterTypeCombinations.STRDBL));
     }
 
@@ -410,7 +415,7 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
     public void setNull(String parameterName, int sqlType, String typeName)
             throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "setNull",
-                new Object[]{parameterName, new Integer(sqlType), typeName},
+                new Object[]{parameterName, Integer.valueOf(sqlType), typeName},
                 ParameterTypeCombinations.STRINTSTR));
     }
 
@@ -590,7 +595,7 @@ public class VirtualCallableStatement extends VirtualPreparedStatement implement
     /* start JDBC4 support */
     public RowId getRowId(int parameterIndex) throws SQLException {
         return (RowId)_sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.CALLABLESTATEMENT, "getRowId",
-                new Object[]{new Integer(parameterIndex)},
+                new Object[]{Integer.valueOf(parameterIndex)},
                 ParameterTypeCombinations.INT));
     }
 
