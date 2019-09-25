@@ -9,14 +9,25 @@
   <url>https://github.com/peter-gergely-horvath/relay-jdbc</url>
   <description>
     relay-jdbc allows a JDBC connection to be relayed through an intermediate
-    relay server.
+    relay server: it is both a JDBC driver (client) and a JDBC relay server.
 
-    It is a fork of https://github.com/AugeoSoftware/VJDBC project,
-    which is a fork of VJDBC hosted on the http://vjdbc.sourceforge.net
+    It is a fork of https://github.com/AugeoSoftware/VJDBC project, where
+    Aleksei Yu. Semenov has implemented a number of brilliant improvements
+    of the orignal VJDBC project hosted on http://vjdbc.sourceforge.net
     Original Developers were: Hunter Payne (sfcat@users.sourceforge.net)
     and Michael Link (urmeli@users.sourceforge.net).
-  </description>
+    For all pre-existing code, credits go to the original respective author.
 
+    This product brings the original VJDBC concept further and (apart from code
+    quality improvements and bug fixes) implements complete separation of the
+    underlying transport mechanism, introducing support for connecting directly
+    through a SSH pipe, where the relay server interacts with the client through
+    standard I/O pipes.
+
+    The re-designed transport architecture supports easy development of new
+    transport implementations, allowing this JDBC relay to be quickly adapted
+    to a variety of exotic environments.
+  </description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
