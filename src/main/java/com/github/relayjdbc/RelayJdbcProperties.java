@@ -11,7 +11,7 @@ public final class RelayJdbcProperties {
 
     // Factory class that create Servlet-Request enhancers which can put additional Request-Properties
     // in HTTP-Requests
-    public static final String SERVLET_REQUEST_ENHANCER_FACTORY = "relayjdbc.servlet.request_enhancer_factory";
+    public static final String SERVLET_REQUEST_ENHANCER_FACTORY = "relayjdbc.http.request_enhancer_factory";
     
     public static final String USER_NAME = "relayjdbc.user.name";
     

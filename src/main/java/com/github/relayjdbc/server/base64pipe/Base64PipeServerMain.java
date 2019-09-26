@@ -20,7 +20,7 @@ public class Base64PipeServerMain {
 
     protected void runApp(String[] args) throws IOException, ConfigurationException {
         if (!(args.length == 1 || args.length == 2)) {
-            throw new RuntimeException("Expected arguments <configuration file> [properties file]");
+            throw new RuntimeException("Expected arguments: <configuration file> [properties file]");
         }
 
         logger.info("Configuring server from: " + args[0]);
@@ -44,9 +44,9 @@ public class Base64PipeServerMain {
                     new PrintWriter(new OutputStreamWriter(getStdOut(), StandardCharsets.UTF_8), true)) {
 
             while(!Thread.currentThread().isInterrupted()) {
-                logger.info("Awaiting console input");
+                logger.debug("Awaiting console input");
                 String lineRead = reader.readLine();
-                logger.info("Read line from input: " + lineRead);
+                logger.trace("Read line from input: " + lineRead);
 
                 if (lineRead == null) {
                     break;
@@ -65,9 +65,10 @@ public class Base64PipeServerMain {
 
                 String responseEncoded = Base64.getEncoder().encodeToString(responseBytes);
 
-                logger.info("Writing response: " + responseEncoded);
+                logger.trace("Writing response: " + responseEncoded);
                 responseWriter.println(responseEncoded);
                 responseWriter.flush();
+                logger.debug("Response sent");
             }
         }
 

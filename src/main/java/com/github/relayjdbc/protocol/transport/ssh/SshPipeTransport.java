@@ -17,18 +17,18 @@ import java.util.Properties;
 
 public class SshPipeTransport implements Transport {
 
-    private static final String SSH_USERNAME = "ssh.username";
-    private static final String SSH_PASSWORD = "ssh.password";
+    public static final String SSH_USERNAME = "ssh.username";
+    public static final String SSH_PASSWORD = "ssh.password";
 
-    private static final String SSH_REMOTE_COMMAND = "ssh.remoteCommand";
+    public static final String SSH_REMOTE_COMMAND = "ssh.remoteCommand";
 
-    private static final String STRICT_HOST_KEY_CHECKING = "ssh.strictHostKeyChecking";
+    public static final String STRICT_HOST_KEY_CHECKING = "ssh.strictHostKeyChecking";
 
 
-    private static final class JSchConstants {
+    public static final class JSchConstants {
 
         private static final String JSCH_STRICT_HOST_KEY_CHECKING = "StrictHostKeyChecking";
-        private static final String DISABLE_STRICT_HOST_KEY_CHECKING = "no";
+        public static final String DEFAULT_STRICT_HOST_KEY_CHECKING = "no";
     }
 
 
@@ -50,7 +50,7 @@ public class SshPipeTransport implements Transport {
             final String remoteCommand = getRequiredProperty(properties, SSH_REMOTE_COMMAND);
 
             String strictHostCheckingProperty =
-                    properties.getProperty(STRICT_HOST_KEY_CHECKING, JSchConstants.DISABLE_STRICT_HOST_KEY_CHECKING);
+                    properties.getProperty(STRICT_HOST_KEY_CHECKING, JSchConstants.DEFAULT_STRICT_HOST_KEY_CHECKING);
 
 
             final String host = url.split(":")[0];

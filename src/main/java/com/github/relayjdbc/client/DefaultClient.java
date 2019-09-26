@@ -25,13 +25,13 @@ import com.github.relayjdbc.server.config.ConfigurationException;
 import com.github.relayjdbc.util.PerformanceConfig;
 import com.github.relayjdbc.util.SQLExceptionHelper;
 
-class DefaultClient implements CommandSink {
+public class DefaultClient implements CommandSink {
     private static Log _logger = LogFactory.getLog(DefaultClient.class);
 
     private final DataFormat dataFormat;
     private final Transport transport;
 
-    DefaultClient(
+    public DefaultClient(
             Transport transport,
             DataFormat dataFormat) {
         this.dataFormat = dataFormat;
