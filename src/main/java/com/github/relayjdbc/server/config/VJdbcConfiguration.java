@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import com.github.relayjdbc.server.command.CommandProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,7 +16,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class VJdbcConfiguration {
     private static Log _logger = LogFactory.getLog(VJdbcConfiguration.class);
+
     private static VJdbcConfiguration _singleton;
+    private static final Object configurationSingletonLockObject = new Object();
 
     private OcctConfiguration _occtConfiguration = new OcctConfiguration();
     private RmiConfiguration _rmiConfiguration;
@@ -41,69 +44,17 @@ public class VJdbcConfiguration {
 
 
     /**
-     * Initialization with pre-built configuration object.
-     * @param customConfig
-     */
-    public static void init(VJdbcConfiguration customConfig) {
-        if(_singleton != null) {
-            _logger.warn("VJdbcConfiguration already initialized, init-Call is ignored");
-        } else {
-            _singleton = customConfig;
-        }
-    }
-
-    /**
-     * Initialization with resource.
-     * @param configResource Resource to be loaded by the ClassLoader
-     * @throws ConfigurationException
-     */
-    public static void init(String configResource) throws ConfigurationException {
-        init(configResource, null);
-    }
-
-    /**
-     * Initialization with resource.
-     * @param configResource Resource to be loaded by the ClassLoader
-     * @throws ConfigurationException
-     */
-    public static void init(String configResource, Properties configVariables) throws ConfigurationException {
-        if(_singleton != null) {
-            _logger.warn("VJdbcConfiguration already initialized, init-Call is ignored");
-        } else {
-        	_singleton = VJdbcConfigurationParser.parse(configResource, configVariables);
-//            try {
-//                _singleton = new VJdbcConfiguration(configResource, configVariables);
-//                if(_logger.isInfoEnabled()) {
-//                    _singleton.log();
-//                }
-//            } catch(Exception e) {
-//                String msg = "relayjdbc-configuration failed";
-//                _logger.error(msg, e);
-//                throw new ConfigurationException(msg, e);
-//            }
-        }
-    }
-
-    /**
      * Initialization with pre-opened InputStream.
      * @param configResourceInputStream InputStream
      * @throws ConfigurationException
      */
     public static void init(InputStream configResourceInputStream, Properties configVariables) throws ConfigurationException {
-        if(_singleton != null) {
-            _logger.warn("VJdbcConfiguration already initialized, init-Call is ignored");
-        } else {
-        	_singleton = VJdbcConfigurationParser.parse(configResourceInputStream, configVariables);
-//            try {
-//                _singleton = new VJdbcConfiguration(configResourceInputStream, configVariables);
-//                if(_logger.isInfoEnabled()) {
-//                    _singleton.log();
-//                }
-//            } catch(Exception e) {
-//                String msg = "relayjdbc-configuration failed";
-//                _logger.error(msg, e);
-//                throw new ConfigurationException(msg, e);
-//            }
+        synchronized (configurationSingletonLockObject) {
+            if(_singleton != null) {
+                _logger.warn("VJdbcConfiguration already initialized, init-Call is ignored");
+            } else {
+                _singleton = VJdbcConfigurationParser.parse(configResourceInputStream, configVariables);
+            }
         }
     }
 
@@ -114,10 +65,12 @@ public class VJdbcConfiguration {
      * previously
      */
     public static VJdbcConfiguration singleton() {
-        if(_singleton == null) {
-            throw new RuntimeException("relayjdbc-configuration is not initialized !");
+        synchronized (configurationSingletonLockObject) {
+            if(_singleton == null) {
+                throw new RuntimeException("relayjdbc-configuration is not initialized !");
+            }
+            return _singleton;
         }
-        return _singleton;
     }
 
     /**

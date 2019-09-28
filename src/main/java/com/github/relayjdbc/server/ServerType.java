@@ -2,7 +2,7 @@ package com.github.relayjdbc.server;
 
 public enum ServerType {
 
-    SERVLET,
+    HTTP,
     BASE64_PIPE;
 
     static ServerType fromString(String requestedName) {

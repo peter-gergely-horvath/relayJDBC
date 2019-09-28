@@ -6,23 +6,14 @@ import org.apache.commons.logging.LogFactory;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class NamedQueryConfiguration {
     private static Log _logger = LogFactory.getLog(NamedQueryConfiguration.class);
-    private Map _queryMap = new HashMap();
-
-//    public Map getQueryMap() {
-//        return _queryMap;
-//    }
-
-    public void addEntry(String id, String sql) {
-        _queryMap.put(id, sql);
-    }
+    private Map<String, String> _queryMap = new HashMap<>();
 
     public String getSqlForId(ConnectionContext ctx, String id) throws SQLException {
-        String result = (String)_queryMap.get(id);
+        String result = _queryMap.get(id);
         if(result != null) {
             return result;
         }
@@ -36,9 +27,10 @@ public class NamedQueryConfiguration {
     void log() {
         _logger.info("  Named Query-Configuration:");
 
-        for (Iterator it = _queryMap.keySet().iterator(); it.hasNext();) {
-            String id = (String) it.next();
-            _logger.info("    [" + id + "] = [" + _queryMap.get(id) + "]");
+        for (Map.Entry<String, String> entry : _queryMap.entrySet()) {
+            String id = entry.getKey();
+            String value = entry.getValue();
+            _logger.info("    [" + id + "] = [" + value + "]");
         }
     }
 }

@@ -253,7 +253,7 @@ public class VJdbcApplet extends Applet {
         
         public void addAddress(int id, String name, String street, String city) {
             Object[] address = new Object[COLUMN_COUNT];
-            address[COLUMN_ID] = new Integer(id);
+            address[COLUMN_ID] = Integer.valueOf(id);
             address[COLUMN_NAME] = name;
             address[COLUMN_STREET] = street;
             address[COLUMN_CITY] = city;

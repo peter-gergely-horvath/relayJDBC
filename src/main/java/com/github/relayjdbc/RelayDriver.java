@@ -1,7 +1,3 @@
-// Relay - Virtual JDBC
-// Written by Michael Link
-// Website: http://Relay.sourceforge.net
-
 package com.github.relayjdbc;
 
 import java.sql.Connection;
@@ -13,6 +9,8 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.github.relayjdbc.client.ConnectionFactory;
+import com.github.relayjdbc.connectiontypes.ConnectionType;
+import com.github.relayjdbc.connectiontypes.ConnectionTypeHandler;
 import com.github.relayjdbc.util.SQLExceptionHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,13 +34,13 @@ public final class RelayDriver implements Driver {
             } catch (ClassNotFoundException e) {
                 logger.info("Couldn't load HSQL-Driver, caching deactivated");
                 cacheEnabled = false;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 logger.error("Unexpected exception occured on loading the HSQL-Driver");
                 cacheEnabled = false;
             }
-        } catch (Exception e) {
-            logger.fatal("Couldn't register RelayDriver JDBC-Driver !", e);
-            throw new RuntimeException("Couldn't register RelayDriver JDBC-Driver !", e);
+        } catch (Throwable t) {
+            logger.fatal("Couldn't register RelayDriver JDBC-Driver !", t);
+            throw new RuntimeException("Couldn't register RelayDriver JDBC-Driver !", t);
         }
     }
 
@@ -65,7 +63,7 @@ public final class RelayDriver implements Driver {
             return null;
         }
 
-        String relayUrl = urlstr.substring(RELAY_DRIVER_JDBC_URL_PREFIX.length());
+        String relayUrl = getRelayUrl(urlstr);
 
         logger.info("Relay-URL: " + relayUrl);
 
@@ -77,12 +75,27 @@ public final class RelayDriver implements Driver {
         }
     }
 
+    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+        if (acceptsURL(url)) {
+            String relayUrl = getRelayUrl(url);
+            ConnectionType connectionType = ConnectionType.fromRelayUrl(relayUrl);
+            if (connectionType != null) {
+                // if there is such a connection type available, inquire it about the available options
+                ConnectionTypeHandler connectionTypeHandler = connectionType.getConnectionTypeHandler();
+
+                return connectionTypeHandler.getJdbcDriverPropertyInfo(relayUrl, info);
+            }
+        }
+        // no details available for the URL supplied
+        return new DriverPropertyInfo[0];
+    }
+
     public boolean acceptsURL(String url) throws SQLException {
         return url.startsWith(RELAY_DRIVER_JDBC_URL_PREFIX);
     }
 
-    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        return new DriverPropertyInfo[0];
+    private String getRelayUrl(String urlstr) {
+        return urlstr.substring(RELAY_DRIVER_JDBC_URL_PREFIX.length());
     }
 
     public int getMajorVersion() {

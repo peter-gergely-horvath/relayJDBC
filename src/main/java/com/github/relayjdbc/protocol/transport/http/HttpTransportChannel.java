@@ -25,6 +25,10 @@ public class HttpTransportChannel implements TransportChannel {
     }
 
     public InputStream sendAndWaitForResponse() throws IOException {
+        if (conn == null) {
+            throw new IllegalStateException("Not connected");
+        }
+
         conn.connect();
         // check the response
         int responseCode = conn.getResponseCode();
@@ -34,7 +38,7 @@ public class HttpTransportChannel implements TransportChannel {
         return conn.getInputStream();
     }
 
-    public OutputStream getOutputStream() throws IOException {
+    public void open() throws IOException {
         conn = (HttpURLConnection) _url.openConnection();
         conn.setDoOutput(true);
         conn.setDoInput(true);
@@ -48,8 +52,12 @@ public class HttpTransportChannel implements TransportChannel {
         if (_requestEnhancer != null) {
             _requestEnhancer.enhanceConnectRequest(new KryoRequestModifier(conn));
         }
+    }
 
-
+    public OutputStream getOutputStream() throws IOException {
+        if (conn == null) {
+            throw new IllegalStateException("Not connected");
+        }
         return conn.getOutputStream();
     }
 

@@ -23,19 +23,19 @@ public class TableCache extends TimerTask {
     // Mappings for generation of the HSQL-Create-Table-Statements, some SQL
     // types won't be cached
     static {
-        _sqlTypeMappingForHSql.put(new Integer(Types.BIGINT), "BIGINT");
-        _sqlTypeMappingForHSql.put(new Integer(Types.BIT), "BIT");
-        _sqlTypeMappingForHSql.put(new Integer(Types.CHAR), "CHAR");
-        _sqlTypeMappingForHSql.put(new Integer(Types.DATE), "DATE");
-        _sqlTypeMappingForHSql.put(new Integer(Types.DECIMAL), "DECIMAL");
-        _sqlTypeMappingForHSql.put(new Integer(Types.DOUBLE), "DOUBLE");
-        _sqlTypeMappingForHSql.put(new Integer(Types.FLOAT), "FLOAT");
-        _sqlTypeMappingForHSql.put(new Integer(Types.INTEGER), "INTEGER");
-        _sqlTypeMappingForHSql.put(new Integer(Types.NUMERIC), "NUMERIC");
-        _sqlTypeMappingForHSql.put(new Integer(Types.SMALLINT), "SMALLINT");
-        _sqlTypeMappingForHSql.put(new Integer(Types.TIMESTAMP), "TIMESTAMP");
-        _sqlTypeMappingForHSql.put(new Integer(Types.TINYINT), "TINYINT");
-        _sqlTypeMappingForHSql.put(new Integer(Types.VARCHAR), "VARCHAR");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.BIGINT), "BIGINT");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.BIT), "BIT");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.CHAR), "CHAR");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.DATE), "DATE");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.DECIMAL), "DECIMAL");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.DOUBLE), "DOUBLE");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.FLOAT), "FLOAT");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.INTEGER), "INTEGER");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.NUMERIC), "NUMERIC");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.SMALLINT), "SMALLINT");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.TIMESTAMP), "TIMESTAMP");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.TINYINT), "TINYINT");
+        _sqlTypeMappingForHSql.put(Integer.valueOf(Types.VARCHAR), "VARCHAR");
     }
 
     // Internal management structure for the SQL-Statements of a table
@@ -187,7 +187,8 @@ public class TableCache extends TimerTask {
         }
 
         // Get the column metadata of the correspondig table
-        ResultSet rs = _dbMetaData.getColumns(null, null, table.toUpperCase(), "%");
+        ResultSet rs = _dbMetaData.getColumns(null, null,
+                table.toUpperCase(Locale.ENGLISH), "%");
         // Create different StringBuffers for the future SQL-Statements
         StringBuffer sbCreate = new StringBuffer("CREATE TABLE " + table + " (");
         StringBuffer sbInsert = new StringBuffer("INSERT INTO " + table + " (");
@@ -198,7 +199,7 @@ public class TableCache extends TimerTask {
         while(rs.next()) {
             String columnName = rs.getString("COLUMN_NAME");
             int origDataType = rs.getInt("DATA_TYPE");
-            String dataType = (String)_sqlTypeMappingForHSql.get(new Integer(origDataType));
+            String dataType = (String)_sqlTypeMappingForHSql.get(Integer.valueOf(origDataType));
 
             // There might be an unknown data type
             if(dataType != null) {
@@ -232,9 +233,10 @@ public class TableCache extends TimerTask {
         String insert = sbInsert.toString();
         String select = sbSelect.toString();
         // Execute the creation query
-        _hsqlStatement.executeQuery(create);
+        _hsqlStatement.executeUpdate(create);
         // If we got here the creation was successful and the new cache entry can be created
-        _tableEntries.put(table.toLowerCase(), new CacheEntry(table, refreshInterval, create, insert, select));
+        _tableEntries.put(table.toLowerCase(Locale.ENGLISH),
+                new CacheEntry(table, refreshInterval, create, insert, select));
     }
 
     public void run() {

@@ -12,6 +12,7 @@ import java.util.zip.Deflater;
 
 import javax.sql.DataSource;
 
+import com.github.relayjdbc.RelayJdbcProperties;
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDriver;
@@ -21,7 +22,6 @@ import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 import com.github.relayjdbc.VJdbcException;
-import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.server.DataSourceProvider;
 import com.github.relayjdbc.server.LoginHandler;
 import com.github.relayjdbc.util.PerformanceConfig;
@@ -472,8 +472,8 @@ public class ConnectionConfiguration implements Executor {
                 }
             }
 
-            String loginUser = props.getProperty(VJdbcProperties.LOGIN_USER);
-            String loginPassword = props.getProperty(VJdbcProperties.LOGIN_PASSWORD);
+            String loginUser = props.getProperty(RelayJdbcProperties.LOGIN_USER);
+            String loginPassword = props.getProperty(RelayJdbcProperties.LOGIN_PASSWORD);
 
             if(loginUser == null) {
                 _logger.warn("Property vjdbc.login.user is not set, " + "the login-handler might not be satisfied");
@@ -483,7 +483,7 @@ public class ConnectionConfiguration implements Executor {
                 _logger.warn("Property vjdbc.login.password is not set, " + "the login-handler might not be satisfied");
             }
 
-            props.put(VJdbcProperties.USER_NAME, _loginHandlerInstance.checkLogin(loginUser, loginPassword));
+            props.put(RelayJdbcProperties.USER_NAME, _loginHandlerInstance.checkLogin(loginUser, loginPassword));
 
             _logger.debug("... successful");
         }

@@ -56,7 +56,7 @@ public class VirtualStatement extends VirtualBase implements Statement {
         // We no longer need the additional values for information, so reset
         // them so they are no longer serialized
         reg.resetValues();
-        fastUpdate = "true".equals(ClientInfo.getProperties(null).getProperty(ClientInfo.VJDBC_FAST_UPDATE));
+        fastUpdate = "true".equals(ClientInfo.getProperties(null).getProperty(ClientInfo.RELAY_FAST_UPDATE));
     }
 
     protected void finalize() throws Throwable {
@@ -107,7 +107,7 @@ public class VirtualStatement extends VirtualBase implements Statement {
 
     public void setMaxFieldSize(int max) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.STATEMENT, "setMaxFieldSize",
-                new Object[] { new Integer(max) }, ParameterTypeCombinations.INT));
+                new Object[] { Integer.valueOf(max) }, ParameterTypeCombinations.INT));
     }
 
     public int getMaxRows() throws SQLException {
@@ -122,7 +122,7 @@ public class VirtualStatement extends VirtualBase implements Statement {
 
     public void setMaxRows(int max) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.STATEMENT, "setMaxRows",
-                new Object[] { new Integer(max) }, ParameterTypeCombinations.INT));
+                new Object[] { Integer.valueOf(max) }, ParameterTypeCombinations.INT));
         _maxRows = max;
     }
 
@@ -143,7 +143,7 @@ public class VirtualStatement extends VirtualBase implements Statement {
 
     public void setQueryTimeout(int seconds) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.STATEMENT, "setQueryTimeout",
-                new Object[] { new Integer(seconds) }, ParameterTypeCombinations.INT));
+                new Object[] { Integer.valueOf(seconds) }, ParameterTypeCombinations.INT));
         _queryTimeout = seconds;
     }
 
@@ -202,7 +202,7 @@ public class VirtualStatement extends VirtualBase implements Statement {
 
     public void setFetchDirection(int direction) throws SQLException {
         _sink.process(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.STATEMENT, "setFetchDirection",
-                new Object[] { new Integer(direction) }, ParameterTypeCombinations.INT));
+                new Object[] { Integer.valueOf(direction) }, ParameterTypeCombinations.INT));
     }
 
     public int getFetchDirection() throws SQLException {
@@ -249,7 +249,7 @@ public class VirtualStatement extends VirtualBase implements Statement {
 
     public boolean getMoreResults(int current) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.STATEMENT,
-                "getMoreResults", new Object[] { new Integer(current) }, ParameterTypeCombinations.INT));
+                "getMoreResults", new Object[] { Integer.valueOf(current) }, ParameterTypeCombinations.INT));
     }
 
     public ResultSet getGeneratedKeys() throws SQLException {

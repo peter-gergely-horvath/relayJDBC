@@ -14,6 +14,7 @@ class SshTransportChannel implements TransportChannel {
     private static final int STREAM_END_FLAG = -1;
 
     private static final int READ_BUFFER_SIZE = 32 * 1024;
+    private static final int READ_DELAY = 50;
 
     private static byte[] NEW_LINE_BYTES = System.getProperty("line.separator").getBytes(StandardCharsets.UTF_8);
 
@@ -37,15 +38,23 @@ class SshTransportChannel implements TransportChannel {
 
 
     @Override
-    public OutputStream getOutputStream() {
-
+    public void open()  {
         requestPayloadCollectorByteArrayOutputStream = new ByteArrayOutputStream();
+    }
 
+    @Override
+    public OutputStream getOutputStream() {
+        if (requestPayloadCollectorByteArrayOutputStream == null) {
+            throw new IllegalStateException("Not connected");
+        }
         return requestPayloadCollectorByteArrayOutputStream;
     }
 
     @Override
     public InputStream sendAndWaitForResponse() throws IOException {
+        if (requestPayloadCollectorByteArrayOutputStream == null) {
+            throw new IllegalStateException("Not connected");
+        }
 
         requestPayloadCollectorByteArrayOutputStream.flush();
         byte[] requestPayload = requestPayloadCollectorByteArrayOutputStream.toByteArray();
@@ -69,34 +78,33 @@ class SshTransportChannel implements TransportChannel {
     // as a work-around we have implemented the logic to read a whole line
     private byte[] readNextLineBytes() throws IOException {
         try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            ByteArrayOutputStream outputBuffer = new ByteArrayOutputStream();
 
-            byte[] data = new byte[READ_BUFFER_SIZE];
+            byte[] readBuffer = new byte[READ_BUFFER_SIZE];
 
-            readRetries:
-            while (true) {
+            readRetries: while (true) {
                 int numberOfBytesRead;
 
                 while (inputStream.available() > 0
-                        && (numberOfBytesRead = inputStream.read(data, 0, data.length)) != STREAM_END_FLAG) {
+                        && (numberOfBytesRead = inputStream.read(readBuffer, 0, readBuffer.length)) != STREAM_END_FLAG) {
 
-                    buffer.write(data, 0, numberOfBytesRead);
+                    outputBuffer.write(readBuffer, 0, numberOfBytesRead);
 
                     if (numberOfBytesRead > 0) {
                         final int endIndexOfReadBuffer = numberOfBytesRead - 1;
-                        final byte lastByteRead = data[endIndexOfReadBuffer];
+                        final byte lastByteRead = readBuffer[endIndexOfReadBuffer];
 
                         if (lastByteRead == LINE_FEED || lastByteRead == CARRIAGE_RETURN) {
                             break readRetries;
                         }
                     }
                 }
-                Thread.sleep(50);
+                Thread.sleep(READ_DELAY);
             }
 
 
-            buffer.flush();
-            return buffer.toByteArray();
+            outputBuffer.flush();
+            return outputBuffer.toByteArray();
 
         } catch (InterruptedException e) {
 

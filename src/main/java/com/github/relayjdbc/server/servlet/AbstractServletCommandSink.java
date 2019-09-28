@@ -79,12 +79,6 @@ public abstract class AbstractServletCommandSink extends HttpServlet {
                                 new FileInputStream(ctx.getRealPath(configVariables));
                     }
 
-                    if (configVariablesInputStream == null) {
-                        String msg = "Configuration-Variables " + configVariables + " not found !";
-                        _logger.error(msg);
-                        throw new ServletException(msg);
-                    }
-
                     configVariablesProps = new Properties();
                     configVariablesProps.load(configVariablesInputStream);
                 } catch (IOException e) {
@@ -92,12 +86,7 @@ public abstract class AbstractServletCommandSink extends HttpServlet {
                     _logger.error(msg, e);
                     throw new ServletException(msg, e);
                 } finally {
-                    if (configVariablesInputStream != null) {
-                        try {
-                            configVariablesInputStream.close();
-                        } catch (IOException e) {
-                        }
-                    }
+                    StreamCloser.close(configVariablesInputStream);
                 }
             }
 

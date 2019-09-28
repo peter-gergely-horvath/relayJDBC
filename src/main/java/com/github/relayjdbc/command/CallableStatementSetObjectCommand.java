@@ -87,41 +87,22 @@ public class CallableStatementSetObjectCommand implements Command,KryoSerializab
     }
 
     public Object execute(Object target, ConnectionContext ctx) throws SQLException {
-        CallableStatement cstmt = (CallableStatement)target;
+        CallableStatement cstmt = (CallableStatement) target;
 
-        switch(_argsCount){
-        case 1:
-        	cstmt.setObject(_paramName, _object);
-        	break;
-        case 2:
-        	cstmt.setObject(_paramName, _object, _targetSqlType);
-        	break;
-        case 3:
-        	cstmt.setObject(_paramName, _object, _targetSqlType, _scale);
+        switch (_argsCount) {
+            case 1:
+                cstmt.setObject(_paramName, _object);
+                break;
+            case 2:
+                cstmt.setObject(_paramName, _object, _targetSqlType);
+                break;
+            case 3:
+                cstmt.setObject(_paramName, _object, _targetSqlType, _scale);
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected argsCount=" + _argsCount);
         }
-        
-//        if(_paramName != null) {
-//            if(_targetSqlType != null) {
-//                if(_scale != null) {
-//                    cstmt.setObject(_paramName, obj, _targetSqlType.intValue(), _scale.intValue());
-//                } else {
-//                    cstmt.setObject(_paramName, obj, _targetSqlType.intValue());
-//                }
-//            } else {
-//                cstmt.setObject(_paramName, obj);
-//            }
-//        } else {
-//            if(_targetSqlType != null) {
-//                if(_scale != null) {
-//                    cstmt.setObject(_index, obj, _targetSqlType.intValue(), _scale.intValue());
-//                } else {
-//                    cstmt.setObject(_index, obj, _targetSqlType.intValue());
-//                }
-//            } else {
-//                cstmt.setObject(_index, obj);
-//            }
-//        }
-
         return null;
     }
 

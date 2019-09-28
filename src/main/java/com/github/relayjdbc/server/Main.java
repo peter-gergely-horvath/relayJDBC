@@ -1,11 +1,16 @@
 package com.github.relayjdbc.server;
 
-import com.github.relayjdbc.server.base64pipe.Base64PipeServer;
-import com.github.relayjdbc.server.servlet.ServletMain;
+import com.github.relayjdbc.server.base64pipe.Base64PipeServerMain;
+import com.github.relayjdbc.server.servlet.HttpServerMain;
+
+import java.io.File;
 
 public final class Main {
 
     private static final int EXIT_CODE_SERVER_START_FAILED = 1;
+
+    private static final String LOG_CONFIG_FILE_PATH_XML = "./relay-jdbc.log4j.xml";
+    private static final String LOG_CONFIG_FILE_PATH_PROPERTIES = "./relay-jdbc.log4j.properties";
 
     private Main() {
         // no external instances
@@ -14,6 +19,8 @@ public final class Main {
     public static void main(String[] args) {
 
         try {
+            configureLogging();
+
             if (args.length == 0) {
                 throw new IllegalArgumentException("At least one argument, server type is required");
             }
@@ -25,14 +32,14 @@ public final class Main {
             String[] serverMainArgs = dropServerType(args);
 
             switch (serverType) {
-                case SERVLET:
-                    ServletMain.main(serverMainArgs);
+                case HTTP:
+                    HttpServerMain.main(serverMainArgs);
 
                     break;
 
 
                 case BASE64_PIPE:
-                    Base64PipeServer.main(serverMainArgs);
+                    Base64PipeServerMain.main(serverMainArgs);
 
                     break;
 
@@ -48,6 +55,27 @@ public final class Main {
             ex.printStackTrace();
 
             System.exit(EXIT_CODE_SERVER_START_FAILED);
+        }
+    }
+
+    private static void configureLogging() {
+
+        if (System.getProperty("log4j.configuration") != null) {
+            // we accept user-specified external configuration files
+            return;
+        }
+
+        if (new File(LOG_CONFIG_FILE_PATH_XML).exists()) {
+            System.setProperty("log4j.configuration", "file:" + LOG_CONFIG_FILE_PATH_XML);
+        } else {
+            if (new File(LOG_CONFIG_FILE_PATH_PROPERTIES).exists()) {
+                System.setProperty("log4j.configuration", "file:" + LOG_CONFIG_FILE_PATH_PROPERTIES);
+            } else {
+                throw new RuntimeException("Logging must be configured, either through log4j.configuration property or "
+                                + "a log configuration file named '"
+                                + LOG_CONFIG_FILE_PATH_XML +"' or '"
+                                + LOG_CONFIG_FILE_PATH_PROPERTIES +"'");
+            }
         }
     }
 

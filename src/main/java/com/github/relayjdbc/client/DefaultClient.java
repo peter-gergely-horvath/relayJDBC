@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import com.github.relayjdbc.RelayJdbcProperties;
 import com.github.relayjdbc.command.CommandSink;
 import com.github.relayjdbc.protocol.dataformat.DataFormat;
 import com.github.relayjdbc.protocol.dataformat.Decoder;
@@ -16,7 +17,6 @@ import com.github.relayjdbc.protocol.transport.TransportChannel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionSetClientInfoCommand;
 import com.github.relayjdbc.serial.CallingContext;
@@ -25,13 +25,13 @@ import com.github.relayjdbc.server.config.ConfigurationException;
 import com.github.relayjdbc.util.PerformanceConfig;
 import com.github.relayjdbc.util.SQLExceptionHelper;
 
-class DefaultClient implements CommandSink {
+public class DefaultClient implements CommandSink {
     private static Log _logger = LogFactory.getLog(DefaultClient.class);
 
     private final DataFormat dataFormat;
     private final Transport transport;
 
-    DefaultClient(
+    public DefaultClient(
             Transport transport,
             DataFormat dataFormat) {
         this.dataFormat = dataFormat;
@@ -43,6 +43,8 @@ class DefaultClient implements CommandSink {
         try (TransportChannel transportChannel = transport.getTransportChannel();
              Encoder encoder = dataFormat.getProtocolEncoder();
              Decoder decoder = dataFormat.getProtocolDecoder()) {
+
+            transportChannel.open();
 
             OutputStream outputStream = transportChannel.getOutputStream();
 
@@ -92,6 +94,8 @@ class DefaultClient implements CommandSink {
              Encoder encoder = dataFormat.getProtocolEncoder();
              Decoder decoder = dataFormat.getProtocolDecoder()) {
 
+            transportChannel.open();
+
             OutputStream outputStream = transportChannel.getOutputStream();
 
             ExecuteCommandRequest executeCommandRequest = new ExecuteCommandRequest(connuid, uid, cmd, ctx);
@@ -120,7 +124,7 @@ class DefaultClient implements CommandSink {
     private void updatePerformanceConfig(ConnectionSetClientInfoCommand cmd) {
         String name = cmd.getName();
         String value = cmd.getValue();
-        if (VJdbcProperties.PERFORMANCE_PROFILE.equals(name)) {
+        if (RelayJdbcProperties.PERFORMANCE_PROFILE.equals(name)) {
             try {
                 final int performanceProfile = Integer.parseInt(value);
                 final int newCompressionMode = PerformanceConfig.getCompressionMode(performanceProfile);
@@ -134,7 +138,7 @@ class DefaultClient implements CommandSink {
             } catch (ConfigurationException e) {
                 _logger.debug("Ignoring invalid performance profile", e);
             }
-        } else if (VJdbcProperties.COMPRESSION_MODE.equals(name)) {
+        } else if (RelayJdbcProperties.COMPRESSION_MODE.equals(name)) {
             try {
                 final int newCompressionMode = PerformanceConfig.parseCompressionMode(value);
 
@@ -143,7 +147,7 @@ class DefaultClient implements CommandSink {
             } catch (ConfigurationException e) {
                 _logger.debug("Ignoring invalid compression mode", e);
             }
-        } else if (VJdbcProperties.COMPRESSION_THRESHOLD.equals(name)) {
+        } else if (RelayJdbcProperties.COMPRESSION_THRESHOLD.equals(name)) {
             try {
                 final int newCompressionThreshold = PerformanceConfig.parseCompressionThreshold(value);
 

@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class ByteColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private byte[] values;
 	private int[] nullFlags = null;
 
@@ -19,27 +21,6 @@ public class ByteColumnValues extends ColumnValues {
 		super(Byte.TYPE);
 		values = new byte[initialSize];
 		nullFlags = new int[(initialSize >> 5) + 1];
-	}
-
-	private final void ensureCapacity(int minCapacity) {
-		if (size<minCapacity){
-			size = minCapacity;
-		}		
-		int oldCapacity = values.length;
-		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
-
-			byte[] tmpValues = values;
-			values = new byte[newCapacity];
-			System.arraycopy(tmpValues, 0, values, 0, oldCapacity);
-
-			int[] tmpNullFlags = nullFlags;
-			nullFlags = new int[(newCapacity >> 5) + 1];
-			System.arraycopy(tmpNullFlags, 0, nullFlags, 0, oldCapacity);
-		}
 	}
 
 	@Override

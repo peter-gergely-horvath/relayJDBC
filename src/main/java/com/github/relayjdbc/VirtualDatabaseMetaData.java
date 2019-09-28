@@ -246,7 +246,7 @@ public class VirtualDatabaseMetaData extends VirtualBase implements DatabaseMeta
 
     public boolean supportsConvert(int fromType, int toType) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "supportsConvert", new Object[] { new Integer(fromType), new Integer(toType) },
+                "supportsConvert", new Object[] { Integer.valueOf(fromType), Integer.valueOf(toType) },
                 ParameterTypeCombinations.INTINT));
     }
 
@@ -619,7 +619,7 @@ public class VirtualDatabaseMetaData extends VirtualBase implements DatabaseMeta
 
     public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool
-                .getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA, "supportsTransactionIsolationLevel", new Object[] { new Integer(
+                .getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA, "supportsTransactionIsolationLevel", new Object[] { Integer.valueOf(
                         level) }, ParameterTypeCombinations.INT));
     }
 
@@ -695,7 +695,7 @@ public class VirtualDatabaseMetaData extends VirtualBase implements DatabaseMeta
     public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
             throws SQLException {
         return queryResultSet(CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA, "getBestRowIdentifier", new Object[] {
-                catalog, schema, table, new Integer(scope), nullable ? Boolean.TRUE : Boolean.FALSE },
+                catalog, schema, table, Integer.valueOf(scope), nullable ? Boolean.TRUE : Boolean.FALSE },
                 ParameterTypeCombinations.STRSTRSTRINTBOL));
     }
 
@@ -739,58 +739,58 @@ public class VirtualDatabaseMetaData extends VirtualBase implements DatabaseMeta
 
     public boolean supportsResultSetType(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "supportsResultSetType", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "supportsResultSetType", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "supportsResultSetConcurrency", new Object[] { new Integer(type), new Integer(concurrency) },
+                "supportsResultSetConcurrency", new Object[] { Integer.valueOf(type), Integer.valueOf(concurrency) },
                 ParameterTypeCombinations.INTINT));
     }
 
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "ownUpdatesAreVisible", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "ownUpdatesAreVisible", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean ownDeletesAreVisible(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "ownDeletesAreVisible", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "ownDeletesAreVisible", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean ownInsertsAreVisible(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "ownInsertsAreVisible", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "ownInsertsAreVisible", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "othersUpdatesAreVisible", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "othersUpdatesAreVisible", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean othersDeletesAreVisible(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "othersDeletesAreVisible", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "othersDeletesAreVisible", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean othersInsertsAreVisible(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "othersInsertsAreVisible", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "othersInsertsAreVisible", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean updatesAreDetected(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "updatesAreDetected", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "updatesAreDetected", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean deletesAreDetected(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "deletesAreDetected", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "deletesAreDetected", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean insertsAreDetected(int type) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "insertsAreDetected", new Object[] { new Integer(type) }, ParameterTypeCombinations.INT));
+                "insertsAreDetected", new Object[] { Integer.valueOf(type) }, ParameterTypeCombinations.INT));
     }
 
     public boolean supportsBatchUpdates() throws SQLException {
@@ -847,7 +847,7 @@ public class VirtualDatabaseMetaData extends VirtualBase implements DatabaseMeta
 
     public boolean supportsResultSetHoldability(int holdability) throws SQLException {
         return _sink.processWithBooleanResult(_objectUid, CommandPool.getReflectiveCommand(JdbcInterfaceType.DATABASEMETADATA,
-                "supportsResultSetHoldability", new Object[] { new Integer(holdability) },
+                "supportsResultSetHoldability", new Object[] { Integer.valueOf(holdability) },
                 ParameterTypeCombinations.INT));
     }
 

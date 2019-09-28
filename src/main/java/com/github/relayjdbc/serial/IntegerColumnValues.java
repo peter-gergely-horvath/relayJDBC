@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class IntegerColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private int[] values = null;
 	private int[] nullFlags = null;
 
@@ -19,27 +21,6 @@ public class IntegerColumnValues extends ColumnValues {
 		this.values = values;
 		this.nullFlags = nullFlags;
 		this.size = values.length;		
-	}
-
-	private final void ensureCapacity(int minCapacity) {
-		if (size<minCapacity){
-			size = minCapacity;
-		}
-		int oldCapacity = values.length;
-		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
-
-			int[] tmpValues = values;
-			values = new int[newCapacity];
-			System.arraycopy(tmpValues, 0, values, 0, oldCapacity);
-
-			int[] tmpNullFlags = nullFlags;
-			nullFlags = new int[(newCapacity >> 5) + 1];
-			System.arraycopy(tmpNullFlags, 0, nullFlags, 0, oldCapacity);
-		}
 	}
 
 	@Override

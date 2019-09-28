@@ -4,8 +4,8 @@ import java.sql.*;
 
 import com.github.relayjdbc.server.command.ResultSetHolder;
 
-public class JdbcInterfaceType {
-    public static final Class[] _interfaces = new Class[] {
+public final class JdbcInterfaceType {
+    private static final Class[] _interfaces = new Class[] {
         null,
         CallableStatement.class,
         Connection.class,
@@ -23,4 +23,8 @@ public class JdbcInterfaceType {
     public static final int SAVEPOINT = 5;
     public static final int STATEMENT = 6;
     public static final int RESULTSETHOLDER = 7;
+
+    static Class<?> getByIndex(int number) {
+        return _interfaces[number];
+    }
 }

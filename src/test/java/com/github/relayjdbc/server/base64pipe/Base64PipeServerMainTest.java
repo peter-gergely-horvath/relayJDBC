@@ -1,5 +1,6 @@
 package com.github.relayjdbc.server.base64pipe;
 
+import com.github.relayjdbc.protocol.dataformat.DecodeException;
 import com.github.relayjdbc.protocol.dataformat.Decoder;
 import com.github.relayjdbc.protocol.dataformat.Encoder;
 import com.github.relayjdbc.protocol.dataformat.kryo.KryoDataFormat;
@@ -26,7 +27,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Base64PipeServerTest {
+public class Base64PipeServerMainTest {
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -39,7 +40,7 @@ public class Base64PipeServerTest {
     }
 
     @Test(timeout = 15000)
-    public void testServer() throws IOException, ConfigurationException, InterruptedException {
+    public void testServer() throws IOException, ConfigurationException, InterruptedException, DecodeException {
 
         Pipe stdInPipe = Pipe.open();
         Pipe stdOutPipe = Pipe.open();
@@ -50,10 +51,10 @@ public class Base64PipeServerTest {
         OutputStream clientWriter = Base64.getEncoder().wrap(Channels.newOutputStream(stdInPipe.sink()));
         InputStream clientReader = Base64.getDecoder().wrap(Channels.newInputStream(stdOutPipe.source()));
 
-        Base64PipeServer base64PipeServer = new Base64PipeServer() {
+        Base64PipeServerMain base64PipeServerMain = new Base64PipeServerMain() {
             @Override
             protected InputStream getConfigFileStream(String fileToLoad) throws FileNotFoundException {
-                InputStream resourceAsStream = Base64PipeServerTest.class.getResourceAsStream(fileToLoad);
+                InputStream resourceAsStream = Base64PipeServerMainTest.class.getResourceAsStream(fileToLoad);
                 Objects.requireNonNull(resourceAsStream, "config is not found");
 
                 return resourceAsStream;
@@ -72,7 +73,7 @@ public class Base64PipeServerTest {
 
         executorService.execute(() -> {
             try {
-                base64PipeServer.runApp(new String[] {"config.xml"});
+                base64PipeServerMain.runApp(new String[] {"config.xml"});
             } catch (ConfigurationException | IOException e) {
                 throw new RuntimeException(e);
             }

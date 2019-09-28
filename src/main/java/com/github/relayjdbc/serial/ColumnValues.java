@@ -1,5 +1,6 @@
 package com.github.relayjdbc.serial;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -7,7 +8,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-public abstract class ColumnValues {
+public abstract class ColumnValues implements Serializable {
+
+	public static final long serialVersionUID = 1;
+
 	protected final Class componentType;
 	protected int size = 0;
 

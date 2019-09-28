@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class BigDecimalColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private BigDecimal[] values;
 
 	BigDecimalColumnValues(BigDecimal[] values) {
@@ -16,22 +18,6 @@ public class BigDecimalColumnValues extends ColumnValues {
 	BigDecimalColumnValues(int initialSize) {
 		super(BigDecimal.class);
 		values = new BigDecimal[initialSize];
-	}
-
-	private final void ensureCapacity(int minCapacity) {
-		if (size < minCapacity) {
-			size = minCapacity;
-		}
-		int oldCapacity = values.length;
-		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
-			BigDecimal[] tmpValues = values;
-			values = new BigDecimal[newCapacity];
-			System.arraycopy(tmpValues, 0, values, 0, oldCapacity);
-		}
 	}
 
 	@Override

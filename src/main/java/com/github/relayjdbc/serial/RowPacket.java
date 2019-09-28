@@ -1,26 +1,20 @@
 package com.github.relayjdbc.serial;
 
+import com.github.relayjdbc.util.JavaVersionInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Struct;
-import java.sql.Types;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.github.relayjdbc.util.JavaVersionInfo;
+import java.sql.*;
 
 /**
  * A RowPacket contains the data of a part (or a whole) JDBC-ResultSet.
  */
 public class RowPacket implements Externalizable {
-    static final int ORACLE_ROW_ID = -8;
+    private static final int ORACLE_ROW_ID = -8;
     private static final int DEFAULT_ARRAY_SIZE = 100;
     static final long serialVersionUID = 6366194574502000718L;
 
@@ -70,7 +64,7 @@ public class RowPacket implements Externalizable {
         }
     }
 
-    public boolean isLastPart() {
+    boolean isLastPart() {
     	return _lastPart;
     }
 
@@ -240,7 +234,7 @@ public class RowPacket implements Externalizable {
                 _logger.debug("Column-Type " + i + ": " + metaData.getColumnType(i));
             }
 
-            Class componentType = null;
+            Class componentType;
 
             switch (columnType) {
             case Types.NULL:
@@ -264,54 +258,44 @@ public class RowPacket implements Externalizable {
             		int precision = metaData.getPrecision(i);
             		if (precision > 0 && precision <= 5) {
             			_columnTypes[i - 1] = Types.SMALLINT;
-            			componentType = Short.TYPE;
-                    	_flattenedColumnsValues[i - 1] = new ShortColumnValues(initialSize);
+                        _flattenedColumnsValues[i - 1] = new ShortColumnValues(initialSize);
                     	break;
             		} else if ((precision > 5 && precision < 39) || (precision == 0)){
             			_columnTypes[i - 1] = Types.INTEGER;
-            			componentType = Integer.TYPE;
-                    	_flattenedColumnsValues[i - 1] = new IntegerColumnValues(initialSize);
+                        _flattenedColumnsValues[i - 1] = new IntegerColumnValues(initialSize);
                     	break;
             		}
-            	}            	
-            	componentType = BigDecimal.class;
-            	_flattenedColumnsValues[i - 1] = new BigDecimalColumnValues(initialSize);
+            	}
+                _flattenedColumnsValues[i - 1] = new BigDecimalColumnValues(initialSize);
             	break;
             case Types.BIT:
-                componentType = Boolean.TYPE;
-            	_flattenedColumnsValues[i - 1] = new BooleanColumnValues(initialSize);
+                _flattenedColumnsValues[i - 1] = new BooleanColumnValues(initialSize);
 
                 break;
 
             case Types.TINYINT:
-                componentType = Byte.TYPE;
-            	_flattenedColumnsValues[i - 1] = new ByteColumnValues(initialSize);
+                _flattenedColumnsValues[i - 1] = new ByteColumnValues(initialSize);
                 break;
 
             case Types.SMALLINT:
-                componentType = Short.TYPE;
-            	_flattenedColumnsValues[i - 1] = new ShortColumnValues(initialSize);                
+                _flattenedColumnsValues[i - 1] = new ShortColumnValues(initialSize);
                 break;
 
             case Types.INTEGER:
-                componentType = Integer.TYPE;
-            	_flattenedColumnsValues[i - 1] = new IntegerColumnValues(initialSize);
+                _flattenedColumnsValues[i - 1] = new IntegerColumnValues(initialSize);
                 break;
 
             case Types.BIGINT:
-                componentType = Long.TYPE;
-            	_flattenedColumnsValues[i - 1] = new LongColumnValues(initialSize);
+                _flattenedColumnsValues[i - 1] = new LongColumnValues(initialSize);
                 break;
 
             case Types.REAL:
-                componentType = Float.TYPE;
-            	_flattenedColumnsValues[i - 1] = new FloatColumnValues(initialSize);
+                _flattenedColumnsValues[i - 1] = new FloatColumnValues(initialSize);
                 break;
 
             case Types.FLOAT:
             case Types.DOUBLE:
-                componentType = Double.TYPE;
-            	_flattenedColumnsValues[i - 1] = new DoubleColumnValues(initialSize);                
+                _flattenedColumnsValues[i - 1] = new DoubleColumnValues(initialSize);
                 break;
 
             case Types.DATE:
@@ -369,8 +353,7 @@ public class RowPacket implements Externalizable {
             default:
                 if(JavaVersionInfo.use14Api) {
                     if(columnType == Types.BOOLEAN) {
-                        componentType = Boolean.TYPE;
-                    	_flattenedColumnsValues[i - 1] = new BooleanColumnValues(initialSize);
+                        _flattenedColumnsValues[i - 1] = new BooleanColumnValues(initialSize);
                     } else {
                         componentType = Object.class;
                     	_flattenedColumnsValues[i - 1] = new ObjectColumnValues(componentType, initialSize);

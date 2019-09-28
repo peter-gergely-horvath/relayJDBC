@@ -98,6 +98,9 @@ public class ByteStreamParameter implements PreparedStatementParameter {
             case TYPE_BINARY:
                 pstmt.setBinaryStream(index, bais, _length);
                 break;
+
+            default:
+                throw new IllegalStateException("Unexpected type=" + _type);
         }
     }
 

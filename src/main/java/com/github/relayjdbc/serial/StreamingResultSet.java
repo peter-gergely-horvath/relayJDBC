@@ -244,7 +244,7 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
         columnIndex--;
         _lastReadColumn = columnIndex;
         BigDecimal result = _columnValues[columnIndex].getBigDecimal(_cursor);
-        result.setScale(scale);
+        result = result.setScale(scale);
 		return result;
     }
 
@@ -813,9 +813,18 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
         Date date = getDate(columnIndex);
         if (date!=null){
         	cal.setTime(date);
-            return (Date)cal.getTime();
+            return calendarToDate(cal);
         }
         return null;
+    }
+
+    private static Date calendarToDate(Calendar cal) {
+        java.util.Date utilDate = cal.getTime();
+        if (utilDate instanceof Date) {
+            return (Date)utilDate;
+        } else {
+            return new Date(utilDate.getTime());
+        }
     }
 
     public Date getDate(String columnName, Calendar cal) throws SQLException {
@@ -824,13 +833,22 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
 
 	public Time getTime(int columnIndex, Calendar cal) throws SQLException {
 		columnIndex--;
-		Time time = (Time) getTime(columnIndex);
+		Time time = getTime(columnIndex);
 		if (time != null) {
 			cal.setTime(time);
-			return (Time) cal.getTime();
-		}
+            return calendarToTime(cal);
+        }
 		return null;
 	}
+
+    private Time calendarToTime(Calendar cal) {
+        java.util.Date date = cal.getTime();
+        if (date instanceof Time) {
+            return (Time)date;
+        } else {
+            return new Time(date.getTime());
+        }
+    }
 
     public Time getTime(String columnName, Calendar cal) throws SQLException {
         return getTime(getIndexForName(columnName), cal);
@@ -840,10 +858,19 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
         Timestamp timestamp = getTimestamp(columnIndex);
         if(timestamp != null) {
             cal.setTime(timestamp);
-            return (Timestamp)cal.getTime();
+            return calendarToTimestamp(cal);
         }
         else {
             return null;
+        }
+    }
+
+    private Timestamp calendarToTimestamp(Calendar cal) {
+        java.util.Date time = cal.getTime();
+        if (time instanceof Timestamp) {
+            return (Timestamp)time;
+        } else {
+            return new Timestamp(time.getTime());
         }
     }
 
@@ -979,26 +1006,6 @@ public class StreamingResultSet implements ResultSet, Externalizable,KryoSeriali
     		}
     	}
     	return false;
-    }
-
-    private Date getCleanDate(long millis) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(millis);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return new Date(cal.getTimeInMillis());
-    }
-
-    private Time getCleanTime(long millis) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(millis);
-        cal.set(Calendar.YEAR, 1970);
-        cal.set(Calendar.MONTH, Calendar.JANUARY);
-        cal.set(Calendar.DATE, 1);
-        cal.set(Calendar.MILLISECOND, 0);
-        return new Time(cal.getTimeInMillis());
     }
 
     /* start JDBC4 support */

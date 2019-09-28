@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import com.github.relayjdbc.VJdbcProperties;
+import com.github.relayjdbc.RelayJdbcProperties;
 import com.github.relayjdbc.RelayDriver;
 import com.github.relayjdbc.serial.StreamSerializer;
 import junit.framework.Test;
@@ -61,7 +61,7 @@ public abstract class VJdbcTest extends TestCase {
 
     protected Properties getVJdbcProperties() {
         Properties props = new Properties();
-        props.setProperty(VJdbcProperties.CLIENTINFO_PROPERTIES, "user.name;java.version;os.name");
+        props.setProperty(RelayJdbcProperties.CLIENTINFO_PROPERTIES, "user.name;java.version;os.name");
 
         Properties systemProps = System.getProperties();
         for(Enumeration e = systemProps.keys(); e.hasMoreElements();)

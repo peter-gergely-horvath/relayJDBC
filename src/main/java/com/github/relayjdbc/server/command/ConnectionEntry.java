@@ -10,22 +10,20 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
+import com.github.relayjdbc.RelayJdbcProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.github.relayjdbc.VJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
 import com.github.relayjdbc.command.DestroyCommand;
@@ -67,7 +65,7 @@ class ConnectionEntry implements ConnectionContext {
 
     // Statistics
     private volatile long _lastAccessTimestamp = System.currentTimeMillis();
-    private long _numberOfProcessedCommands = 0;
+    private AtomicLong _numberOfProcessedCommands = new AtomicLong(0);
 
     // Map containing all JDBC-Objects which are created by this Connection
     // entry
@@ -83,7 +81,7 @@ class ConnectionEntry implements ConnectionContext {
         _compressionMode = _connectionConfiguration.getCompressionModeAsInt();
         _compressionThreshold = _connectionConfiguration.getCompressionThreshold();
         _rowPacketSize = _connectionConfiguration.getRowPacketSize();
-        _userName = clientInfo.getProperty(VJdbcProperties.USER_NAME);
+        _userName = clientInfo.getProperty(RelayJdbcProperties.USER_NAME);
         
         // Put the connection into the JDBC-Object map
         _jdbcObjects.put(connuid, new JdbcObjectHolder(conn, ctx, JdbcInterfaceType.CONNECTION));
@@ -132,44 +130,44 @@ class ConnectionEntry implements ConnectionContext {
 
     public void setClientInfo(String name, String value){
     	_clientInfo.setProperty(name, value);
-    	if (VJdbcProperties.PERFORMANCE_PROFILE.equals(name)){
+    	if (RelayJdbcProperties.PERFORMANCE_PROFILE.equals(name)){
     		try {
 				int performanceProfile = Integer.parseInt(value);
 				_compressionMode = PerformanceConfig.getCompressionMode(performanceProfile);
 				_compressionThreshold = PerformanceConfig.getCompressionThreshold(performanceProfile);
 				_rowPacketSize = PerformanceConfig.getRowPacketSize(performanceProfile);
     		} catch (NumberFormatException e) {
-				_logger.debug("Ignoring invalid number format for performance profile from client "+_clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_ADDRESS), e);
+				_logger.debug("Ignoring invalid number format for performance profile from client "+_clientInfo.getProperty(ClientInfo.RELAY_CLIENT_ADDRESS), e);
     		} catch (ConfigurationException e) {
-    			_logger.debug("Ignoring invalid performance profile from client "+_clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_ADDRESS), e);
+    			_logger.debug("Ignoring invalid performance profile from client "+_clientInfo.getProperty(ClientInfo.RELAY_CLIENT_ADDRESS), e);
     		}
     	} else 
     		
-    	if (VJdbcProperties.COMPRESSION_MODE.equals(name)){
+    	if (RelayJdbcProperties.COMPRESSION_MODE.equals(name)){
     		try {
 				_compressionMode = PerformanceConfig.parseCompressionMode(value);
 			} catch (ConfigurationException e) {
-				_logger.debug("Ignoring invalid compression mode from client "+_clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_ADDRESS), e);
+				_logger.debug("Ignoring invalid compression mode from client "+_clientInfo.getProperty(ClientInfo.RELAY_CLIENT_ADDRESS), e);
 			}
     	} else 
     		
-   		if (VJdbcProperties.COMPRESSION_THRESHOLD.equals(name)){
+   		if (RelayJdbcProperties.COMPRESSION_THRESHOLD.equals(name)){
     		try {
 				_compressionThreshold = PerformanceConfig.parseCompressionThreshold(value);
 			} catch (ConfigurationException e) {
-				_logger.debug("Ignoring invalid compression threshold from client "+_clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_ADDRESS), e);
+				_logger.debug("Ignoring invalid compression threshold from client "+_clientInfo.getProperty(ClientInfo.RELAY_CLIENT_ADDRESS), e);
 			}   			
    		} else 
    			
-    	if (VJdbcProperties.ROW_PACKET_SIZE.equals(name)){
+    	if (RelayJdbcProperties.ROW_PACKET_SIZE.equals(name)){
     		try {
 				_rowPacketSize = PerformanceConfig.parseRowPacketSize(value);
 			} catch (ConfigurationException e) {
-				_logger.debug("Ignoring invalid row packet size from client "+_clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_ADDRESS), e);
+				_logger.debug("Ignoring invalid row packet size from client "+_clientInfo.getProperty(ClientInfo.RELAY_CLIENT_ADDRESS), e);
 			}
     	} else 
     		
-    	if (VJdbcProperties.USER_NAME.equals(name)){
+    	if (RelayJdbcProperties.USER_NAME.equals(name)){
     		_userName = value;
     	}
     }
@@ -187,7 +185,7 @@ class ConnectionEntry implements ConnectionContext {
     }
     
     public long getNumberOfProcessedCommands() {
-        return _numberOfProcessedCommands;
+        return _numberOfProcessedCommands.get();
     }
 
     public Object getJDBCObject(Long key) {
@@ -311,7 +309,7 @@ class ConnectionEntry implements ConnectionContext {
                 }
             }
 
-            _numberOfProcessedCommands++;
+            _numberOfProcessedCommands.incrementAndGet();
 
             return result;
         } finally {
@@ -344,12 +342,12 @@ class ConnectionEntry implements ConnectionContext {
     
     public void traceConnectionStatistics() {
         _logger.info("  Connection ........... " + _connectionConfiguration.getId());
-        _logger.info("  IP address ........... " + _clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_ADDRESS, "n.a."));
-        _logger.info("  Host name ............ " + _clientInfo.getProperty(ClientInfo.VJDBC_CLIENT_NAME, "n.a."));
+        _logger.info("  IP address ........... " + _clientInfo.getProperty(ClientInfo.RELAY_CLIENT_ADDRESS, "n.a."));
+        _logger.info("  Host name ............ " + _clientInfo.getProperty(ClientInfo.RELAY_CLIENT_NAME, "n.a."));
         _logger.info("  User name ............ " + _userName);
         dumpClientInfoProperties();
         _logger.info("  Last time of access .. " + new Date(_lastAccessTimestamp));
-        _logger.info("  Processed commands ... " + _numberOfProcessedCommands);
+        _logger.info("  Processed commands ... " + _numberOfProcessedCommands.get());
 
         if(_jdbcObjects.size() > 0) {
             _logger.info("  Remaining objects .... " + _jdbcObjects.size());
@@ -368,11 +366,11 @@ class ConnectionEntry implements ConnectionContext {
             _logger.info("  Command-Counts:");
 
             ArrayList<Map.Entry<String, AtomicInteger>> entries = new ArrayList<Map.Entry<String, AtomicInteger>>(_commandCountMap.entrySet());
-            Collections.sort(entries, new Comparator<Map.Entry<String, AtomicInteger>>() {
-                public int compare(Entry<String, AtomicInteger> o1, Entry<String, AtomicInteger> o2) {
-                    // Descending sort
-                    return -Integer.valueOf(o1.getValue().intValue()).compareTo(Integer.valueOf(o2.getValue().intValue()));
-                }
+            entries.sort((leftObject, rightObject) -> {
+                // Descending sort
+                Integer leftValue = leftObject.getValue().intValue();
+                Integer rightValue = rightObject.getValue().intValue();
+                return rightValue.compareTo(leftValue);
             });
 
             for (Map.Entry<String, AtomicInteger> me: entries){

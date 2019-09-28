@@ -16,11 +16,6 @@ public abstract class VirtualBase {
         _sink = sink;
     }
 
-    protected void finalize() throws Throwable {
-        _objectUid = null;
-        _sink = null;
-    }
-
     public UIDEx getObjectUID() {
         return _objectUid;
     }

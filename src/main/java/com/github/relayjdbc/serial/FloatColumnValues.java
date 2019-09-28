@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class FloatColumnValues extends ColumnValues {
 
+	public static final long serialVersionUID = 1;
+
 	private float[] values = null;
 	private int[] nullFlags = null;
 
@@ -19,27 +21,6 @@ public class FloatColumnValues extends ColumnValues {
 		super(Float.TYPE);
 		values = new float[initialSize];
 		nullFlags = new int[(initialSize >> 5) + 1];
-	}
-
-	private final void ensureCapacity(int minCapacity) {
-		if (size<minCapacity){
-			size = minCapacity;
-		}		
-		int oldCapacity = values.length;
-		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
-
-			float[] tmpValues = values;
-			values = new float[newCapacity];
-			System.arraycopy(tmpValues, 0, values, 0, oldCapacity);
-
-			int[] tmpNullFlags = nullFlags;
-			nullFlags = new int[(newCapacity >> 5) + 1];
-			System.arraycopy(tmpNullFlags, 0, nullFlags, 0, oldCapacity);
-		}
 	}
 
 	@Override
