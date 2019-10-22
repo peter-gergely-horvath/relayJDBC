@@ -1,6 +1,6 @@
 package com.github.relayjdbc.protocol.dataformat.kryo;
 
-import com.github.relayjdbc.protocol.dataformat.ProtocolConstants;
+import com.github.relayjdbc.protocol.ProtocolConstants;
 import com.github.relayjdbc.protocol.dataformat.Encoder;
 import com.github.relayjdbc.protocol.messages.ExecuteCommandRequest;
 import com.github.relayjdbc.protocol.messages.ConnectionRequest;
@@ -9,9 +9,6 @@ import com.github.relayjdbc.util.DeflatingOutput;
 import com.github.relayjdbc.util.KryoFactory;
 
 import java.io.OutputStream;
-
-import static com.github.relayjdbc.servlet.ServletCommandSinkIdentifier.CONNECT_COMMAND;
-import static com.github.relayjdbc.servlet.ServletCommandSinkIdentifier.PROCESS_COMMAND;
 
 class KryoEncoder extends KryoSupport implements Encoder {
 
@@ -27,17 +24,15 @@ class KryoEncoder extends KryoSupport implements Encoder {
 
     @Override
     public void encode(OutputStream outputStream, ConnectionRequest connectionRequest)             {
-        try(DeflatingOutput deflatingOutput = new DeflatingOutput(outputStream)) {
+        try(DeflatingOutput output = new DeflatingOutput(outputStream)) {
 
-            kryo.writeObject(deflatingOutput, ProtocolConstants.MAGIC);
-            kryo.writeObject(deflatingOutput, KryoDataFormatConstants.PROTOCOL_VERSION);
-            kryo.writeObject(deflatingOutput, CONNECT_COMMAND);
+            encodeHeader(output, ProtocolConstants.CONNECT_OPERATION);
 
-            kryo.writeObject(deflatingOutput, connectionRequest.getDatabase());
-            kryo.writeObject(deflatingOutput, connectionRequest.getProps());
-            kryo.writeObject(deflatingOutput, connectionRequest.getClientInfo());
-            kryo.writeObjectOrNull(deflatingOutput, connectionRequest.getCtx(), CallingContext.class);
-            deflatingOutput.flush();
+            kryo.writeObject(output, connectionRequest.getDatabase());
+            kryo.writeObject(output, connectionRequest.getProps());
+            kryo.writeObject(output, connectionRequest.getClientInfo());
+            kryo.writeObjectOrNull(output, connectionRequest.getCtx(), CallingContext.class);
+            output.flush();
         }
     }
 
@@ -45,9 +40,8 @@ class KryoEncoder extends KryoSupport implements Encoder {
     public void encode(OutputStream outputStream, ExecuteCommandRequest executeCommandRequest) {
 
         try(DeflatingOutput output = new DeflatingOutput(outputStream, _compressionMode, _compressionThreshold)) {
-            kryo.writeObject(output, ProtocolConstants.MAGIC);
-            kryo.writeObject(output, KryoDataFormatConstants.PROTOCOL_VERSION);
-            kryo.writeObject(output, PROCESS_COMMAND);
+
+            encodeHeader(output, ProtocolConstants.PROCESS_OPERATION);
 
             kryo.writeObjectOrNull(output, executeCommandRequest.getConnuid(), Long.class);
             kryo.writeObjectOrNull(output, executeCommandRequest.getUid(), Long.class);
@@ -55,6 +49,12 @@ class KryoEncoder extends KryoSupport implements Encoder {
             kryo.writeObjectOrNull(output, executeCommandRequest.getCtx(), CallingContext.class);
             output.flush();
         };
+    }
+
+    private void encodeHeader(DeflatingOutput output, String operation) {
+        kryo.writeObject(output, ProtocolConstants.MAGIC);
+        kryo.writeObject(output, KryoDataFormatConstants.PROTOCOL_VERSION);
+        kryo.writeObject(output, operation);
     }
 
 

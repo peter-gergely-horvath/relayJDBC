@@ -6,13 +6,12 @@ import com.github.relayjdbc.VJdbcException;
 import com.github.relayjdbc.RelayJdbcProperties;
 import com.github.relayjdbc.command.Command;
 import com.github.relayjdbc.command.ConnectionContext;
-import com.github.relayjdbc.protocol.dataformat.ProtocolConstants;
 import com.github.relayjdbc.serial.CallingContext;
 import com.github.relayjdbc.server.command.CommandProcessor;
 import com.github.relayjdbc.server.config.ConnectionConfiguration;
 import com.github.relayjdbc.server.config.VJdbcConfiguration;
 import com.github.relayjdbc.server.servlet.KryoServletCommandSink;
-import com.github.relayjdbc.servlet.ServletCommandSinkIdentifier;
+import com.github.relayjdbc.protocol.ProtocolConstants;
 import com.github.relayjdbc.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,10 +65,10 @@ public class CommandDispatcher {
             }
 
             switch (method) {
-                case ServletCommandSinkIdentifier.PROCESS_COMMAND:
+                case ProtocolConstants.PROCESS_OPERATION:
                     return dispatchProcess(kryo, input, output);
 
-                case ServletCommandSinkIdentifier.CONNECT_COMMAND:
+                case ProtocolConstants.CONNECT_OPERATION:
                     return dispatchConnect(kryo, input);
 
                 default:

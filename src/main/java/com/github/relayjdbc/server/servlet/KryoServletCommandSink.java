@@ -1,7 +1,7 @@
 package com.github.relayjdbc.server.servlet;
 
 import com.github.relayjdbc.Version;
-import com.github.relayjdbc.servlet.ServletCommandSinkIdentifier;
+import com.github.relayjdbc.protocol.ProtocolConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,7 +20,7 @@ public class KryoServletCommandSink extends AbstractServletCommandSink {
 
     private static Log logger = LogFactory.getLog(KryoServletCommandSink.class);
 
-    public static final String PROTOCOL_VERSION = Version.version + ServletCommandSinkIdentifier.PROTOCOL_KRYO;
+    public static final String PROTOCOL_VERSION = Version.version + ProtocolConstants.PROTOCOL_KRYO;
 
     public KryoServletCommandSink() {
     }

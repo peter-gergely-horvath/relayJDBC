@@ -8,6 +8,7 @@ import java.util.Properties;
 import com.github.relayjdbc.RelayJdbcProperties;
 import com.github.relayjdbc.command.CommandSink;
 import com.github.relayjdbc.protocol.dataformat.DataFormat;
+import com.github.relayjdbc.protocol.dataformat.DecodeException;
 import com.github.relayjdbc.protocol.dataformat.Decoder;
 import com.github.relayjdbc.protocol.dataformat.Encoder;
 import com.github.relayjdbc.protocol.messages.ExecuteCommandRequest;
@@ -53,12 +54,7 @@ public class DefaultClient implements CommandSink {
 
             InputStream inputStream = transportChannel.sendAndWaitForResponse();
 
-            Object result = decoder.readObject(inputStream);
-
-            if (result instanceof SQLException) {
-                // This might be a SQLException which must be rethrown
-                throw (SQLException) result;
-            }
+            Object result = decodeResponse(decoder, inputStream);
 
             reconfigureProtocol((UIDEx) result);
 
@@ -67,6 +63,24 @@ public class DefaultClient implements CommandSink {
             throw e;
         } catch (Exception e) {
             throw SQLExceptionHelper.wrap(e);
+        }
+    }
+
+    private Object decodeResponse(Decoder decoder, InputStream inputStream) throws SQLException {
+
+        try {
+            Object result = decoder.readObject(inputStream);
+
+            if (result instanceof SQLException) {
+                // This might be a SQLException which must be rethrown
+                throw (SQLException) result;
+            }
+
+            return result;
+
+        } catch (DecodeException e) {
+            throw new SQLException("Failed to decode the response received. " +
+                    "(Ensure the relayed driver JAR is added to the client as well)", e);
         }
     }
 
@@ -103,12 +117,8 @@ public class DefaultClient implements CommandSink {
 
             InputStream inputStream = transportChannel.sendAndWaitForResponse();
 
-            Object result = decoder.readObject(inputStream);
-            if (result instanceof SQLException) {
-                throw (SQLException) result;
-            } else {
-                return result;
-            }
+            return decodeResponse(decoder, inputStream);
+
         } catch (SQLException e) {
             throw e;
         } catch (Exception e) {
