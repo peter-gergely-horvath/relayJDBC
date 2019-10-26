@@ -13,6 +13,9 @@ to the target database using the JDBC driver of the target database
 and relays all communication between the client application and
 the target database.
 
+Both the client JDBC driver and the relay server are packaged into 
+one JAR file allowing a very quick setup.
+
 ```
 +--------------------+
 | Client Application |
@@ -62,7 +65,7 @@ Start the JAR file from command line and specify transport and its configuration
 ```
 2.) Start the JAR file as a single JAR application, specifying the transport used and its configuration. 
     For example, the following will start the HTTP transport with HTTP listening on port 8080 
-    and HTTPS on port 8443: `java -jar relay-jdbc-*.jar http 8080 8443`
+    and HTTPS on port 8443: `java -jar relay-jdbc-*.jar http 8080`
     
 3.) Add the RelayJDBC JAR and the actual delegate driver JARs to the client application and 
     use RelayJDBC connection URL to connect to the relay. For example:
@@ -76,7 +79,7 @@ of the connection URL (here, in the sample URL: `...#h2db`).
 
 ### HTTP Transport 
 
-This transport starts an embedded Servlet container that will listen to incoming HTTP and HTTPS requests.
+This transport starts an embedded Servlet container that will listen to incoming HTTP requests.
 
 #### Starting the relay server 
 
