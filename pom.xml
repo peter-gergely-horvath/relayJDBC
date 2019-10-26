@@ -433,6 +433,13 @@
             </includes>
         </resource>
         <resource>
+            <directory>src/main/resources</directory>
+            <filtering>false</filtering>
+            <includes>
+                <include>META-INF/services/java.sql.Driver</include>
+            </includes>
+        </resource>
+        <resource>
             <directory>src/test/resources</directory>
             <filtering>true</filtering>
             <excludes>

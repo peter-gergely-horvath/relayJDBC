@@ -1,6 +1,7 @@
 package com.github.relayjdbc.connectiontypes;
 
 import com.github.relayjdbc.protocol.transport.ssh.SshPipeTransport;
+import com.github.relayjdbc.util.StringUtils;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;

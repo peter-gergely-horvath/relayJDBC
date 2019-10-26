@@ -1,0 +1,15 @@
+<relayjdbc-configuration>
+    <connection
+            id="h2db"
+            driver="org.h2.Driver"
+            url="jdbc:h2:mem:test"
+            user="sa"
+            password="">
+        <connection-pool
+                maxActive="4"
+                maxIdle="1"
+                maxWait="10000"
+                timeBetweenEvictionRunsMillis="5000"
+                minEvictableIdleTimeMillis="10000"/>
+    </connection>
+</relayjdbc-configuration>

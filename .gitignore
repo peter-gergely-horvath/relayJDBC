@@ -3,5 +3,7 @@ builddir/
 .svn/
 bin
 
+dependency-reduced-pom.xml
+
 .idea/
 *.iml

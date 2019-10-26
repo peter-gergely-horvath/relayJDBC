@@ -5,6 +5,7 @@ import com.github.relayjdbc.protocol.transport.Transport;
 import com.github.relayjdbc.protocol.transport.http.HttpTransport;
 import com.github.relayjdbc.servlet.RequestEnhancer;
 import com.github.relayjdbc.servlet.RequestEnhancerFactory;
+import com.github.relayjdbc.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,6 +21,13 @@ class HttpConnectionTypeHandler extends ConnectionTypeHandler {
 
     HttpConnectionTypeHandler() {
         super("http:");
+    }
+
+    @Override
+    protected String[] splitToUrlAndDataSourceName(String url) {
+        // our prefix is the same as the actual protocol used, so simply split
+        // This allows the following URL format: jdbc:relayjdbc:http://localhost:8080#h2db
+        return StringUtils.split(url);
     }
 
     protected Transport getTransport(String url, Properties props) throws Exception {

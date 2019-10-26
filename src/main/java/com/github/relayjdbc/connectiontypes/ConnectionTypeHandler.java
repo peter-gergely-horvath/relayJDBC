@@ -25,18 +25,22 @@ public abstract class ConnectionTypeHandler implements Serializable {
     }
 
     public String getDataSourceName(String url) {
-        String[] urlAndDataSourceName = StringUtils.split(url.substring(connectionTypePrefix.length()));
+        String[] urlAndDataSourceName = splitToUrlAndDataSourceName(url);
 
         return urlAndDataSourceName[1];
     }
 
     public final CommandSink getCommandSink(String relayUrl, Properties props) throws Exception {
-        String[] urlAndDataSourceName = StringUtils.split(relayUrl.substring(connectionTypePrefix.length()));
+        String[] urlAndDataSourceName = splitToUrlAndDataSourceName(relayUrl);
 
         DataFormat dataFormat = getDataFormat(urlAndDataSourceName[0], props);
         Transport transport = getTransport(urlAndDataSourceName[0], props);
 
         return new DefaultClient(transport, dataFormat);
+    }
+
+    protected String[] splitToUrlAndDataSourceName(String url) {
+        return StringUtils.split(url.substring(connectionTypePrefix.length()));
     }
 
     protected DataFormat getDataFormat(String url, Properties props) {
