@@ -44,7 +44,7 @@ one JAR file allowing a very quick setup.
 
 Start the JAR file from command line and specify transport and its configuration. 
 
-1.) Create a configuration file similar to the following and save it to 
+1.  Create a configuration file similar to the following and save it to 
     `relayjdbc-config.xml` in the current working directory
 ```
 <relayjdbc-configuration>
@@ -63,11 +63,11 @@ Start the JAR file from command line and specify transport and its configuration
 	</connection>
 </relayjdbc-configuration>
 ```
-2.) Start the JAR file as a single JAR application, specifying the transport used and its configuration. 
+2.  Start the JAR file as a single JAR application, specifying the transport used and its configuration. 
     For example, the following will start the HTTP transport with HTTP listening on port 8080 
     and HTTPS on port 8443: `java -jar relay-jdbc-*.jar http 8080`
     
-3.) Add the RelayJDBC JAR and the actual delegate driver JARs to the client application and 
+3.  Add the RelayJDBC JAR and the actual delegate driver JARs to the client application and 
     use RelayJDBC connection URL to connect to the relay. For example:
     `jdbc:relayjdbc:http://localhost:8080#h2db`
     
@@ -87,11 +87,11 @@ Start command: `http <http port>`
 
  * Command line argument: `http`
  * Configuration arguments
-    `http port`: the port to listen on for incoming HTTP requests (required)  
-    `https port`: the port to listen on for incoming HTTPs requests (optional)
+    * `http port`: the port to listen on for incoming HTTP requests (required)  
+    * `https port`: the port to listen on for incoming HTTPs requests (optional)
 
 Examples: 
-1.) `java -jar relay-jdbc-*.jar http 8080`
+1. `java -jar relay-jdbc-*.jar http 8080`
 This will start the HTTP transport with HTTP listening on port 8080 and **NO** HTTP listener 
     
 
@@ -101,9 +101,9 @@ For the HTTP transport, the following URL format is to be used:
  `jdbc:relayjdbc:http://<host name>:<port number>#<connection ID>`
 
 Where the placeholders are:
-    * `host name`: the host to connect to (required)  
-    * `port number`: the port to connect to (required)
-    * `connection ID`: the value of the ID attribute of the connection tag (optional)
+ * `host name`: the host to connect to (required)  
+ * `port number`: the port to connect to (required)
+ * `connection ID`: the value of the ID attribute of the connection tag (optional)
        
  Sample URL: `jdbc:relayjdbc:http://localhost:8080#h2db`
 
@@ -133,14 +133,14 @@ Start command: `base64pipe <configuration file> [properties file]`
 
  * Command line argument: `base64pipe`
  * Configuration arguments
-    `configuration file`: the RelayJDBC configuration file (required)  
-    `properties file`: the RelayJDBC properties file (optional)
+    * `configuration file`: the RelayJDBC configuration file (required)  
+    * `properties file`: the RelayJDBC properties file (optional)
 
 Examples: 
-1.) `java -jar relay-jdbc-*.jar base64pipe config.xml`
+1. `java -jar relay-jdbc-*.jar base64pipe config.xml`
 This will start the BASE64PIPE transport using the `config.xml` configuration file
     
-1.) `java -jar relay-jdbc-*.jar base64pipe config.xml settings.properties`
+2. `java -jar relay-jdbc-*.jar base64pipe config.xml settings.properties`
 This will start the BASE64PIPE transport using the `config.xml` configuration file and `settings.properties` file
 
 #### JDBC URL to connect with
@@ -159,10 +159,9 @@ Where the placeholders are:
 The following properties must be passed to the connection establish call
 (e.g. `java.sql.DriverManager.getConnection(java.lang.String, java.util.Properties)`)
 when using this connection type:
-
-    * `ssh.username`: the username for the SSH authentication
-    * `ssh.password`: the password for the SSH authentication
-    * `ssh.remoteCommand`: the remote command to execute, which will start the BASE64PIPE transport server
+ * `ssh.username`: the username for the SSH authentication
+ * `ssh.password`: the password for the SSH authentication
+ * `ssh.remoteCommand`: the remote command to execute, which will start the BASE64PIPE transport server
     
 NOTE: `ssh.remoteCommand` is the actual OS command that starts the Relay JDBC Server on the remote machine.
 You probably want create a shell script to perform these steps. Remember: if you use this transport mechanism,
@@ -177,7 +176,7 @@ The following properties can be passed to the connection establish call
 (e.g. `java.sql.DriverManager.getConnection(java.lang.String, java.util.Properties)`)
 when using this connection type:
     
-    * `ssh.strictHostKeyChecking`: enforce strict host key matching: `yes`/`no` - default is `no`
+ * `ssh.strictHostKeyChecking`: enforce strict host key matching: `yes`/`no` - default is `no`
 
 
 #### Limitations of BASE64PIPE / SSHPIPE Transport 
@@ -185,7 +184,7 @@ when using this connection type:
 ##### Special log configuration requirement for BASE64PIPE
 
 IMPORTANT NOTICE: Transport `BASE64PIPE` works by piping protocol message data through 
-the standard input/output. If `BASE64PIPE` is used, console logging have to be disabled 
+the standard input/output. If `BASE64PIPE` is used, console logging has to be disabled 
 (e.g. redirect all logs to a file) 
 
 ##### Single connection configuration per file
