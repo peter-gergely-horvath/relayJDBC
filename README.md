@@ -218,3 +218,8 @@ the standard input/output. If `BASE64PIPE` is used, console logging have to be d
 (e.g. redirect all logs to a file) 
 
 
+# Download
+
+Relay JDBC is available in Maven Central.
+
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.peter-gergely-horvath/relay-jdbc.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.peter-gergely-horvath%22%20AND%20a:%22relay-jdbc%22)
