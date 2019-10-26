@@ -7,9 +7,11 @@ import com.esotericsoftware.kryo.Kryo;
 /**
  * <p>Modified version to send log records to commons logging instead of system output.
  * This makes logging of VJDBC and Kryo consistent.
+ * </p>
  * <p>Original description:
  * A low overhead, lightweight logging system.
- * @author Nathan Sweet <misc@n4te.com>
+ * </p>
+ * @author Nathan Sweet misc@n4te.com
  */
 public class Log {
 	

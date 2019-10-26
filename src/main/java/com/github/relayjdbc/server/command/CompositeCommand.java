@@ -44,10 +44,10 @@ public class CompositeCommand  implements Command, Externalizable {
 	 * which could be used for other commands in this {@link CompositeCommand} instance.
 	 * On server side the fake {@link UIDEx} instance is replaced by real one,
 	 * after command is executed for all subsequent commands.
-	 * @param reg
-	 * @param command
-	 * @return
-	 * @throw {@link IllegalArgumentException} if reg references invalid object.  
+	 * @param reg the target identifier
+	 * @param command the command to execute
+	 * @return fake {@link UIDEx} instance, which could be used for other commands in this {@link CompositeCommand} instance.
+	 * @throws IllegalArgumentException if reg references invalid object.
 	 */
 	public synchronized UIDEx add(UIDEx reg, Command command){
 		// check UIDEx is valid
@@ -122,7 +122,7 @@ public class CompositeCommand  implements Command, Externalizable {
 	/**
 	 * update fake {@link UIDEx} instances returned by {@link #add(UIDEx, Command)}
 	 * converting them to real ones on client side. 
-	 * @param results
+	 * @param results the result Objects to update
 	 */
 	public synchronized void updateResultUIDEx(Object [] results) {
 		assert results!=null : CompositeCommand.class + " nevere returns null result";

@@ -70,7 +70,7 @@ public class UIDEx implements Externalizable {
     }
     /**
      * copy all info from given instance
-     * @param reg
+     * @param reg the source to copy from
      */
     public void copyFrom(UIDEx reg){
     	assert this._uid<0 : "Changing valid UIDEx is prohibited"; 

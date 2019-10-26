@@ -46,7 +46,8 @@ public class VJdbcConfiguration {
     /**
      * Initialization with pre-opened InputStream.
      * @param configResourceInputStream InputStream
-     * @throws ConfigurationException
+     * @param configVariables configuration variables represented as Properties
+     * @throws ConfigurationException if the configuration is invalid
      */
     public static void init(InputStream configResourceInputStream, Properties configVariables) throws ConfigurationException {
         synchronized (configurationSingletonLockObject) {
@@ -120,7 +121,7 @@ public class VJdbcConfiguration {
 
     /**
      * Adds a ConnectionConfiguration.
-     * @param connectionConfiguration
+     * @param connectionConfiguration the connection configuration to add
      * @throws ConfigurationException Thrown when the connection identifier already exists
      */
     public void addConnection(ConnectionConfiguration connectionConfiguration) throws ConfigurationException {
@@ -133,30 +134,6 @@ public class VJdbcConfiguration {
         }
     }
 
-//    private VJdbcConfiguration(InputStream configResource, Properties vars) throws IOException, SAXException, ConfigurationException {
-//        Digester digester = createDigester(vars);
-//        digester.parse(configResource);
-//        validateConnections();
-//    }
-//
-//    private VJdbcConfiguration(String configResource, Properties vars) throws IOException, SAXException, ConfigurationException {
-//        Digester digester = createDigester(vars);
-//        digester.parse(configResource);
-//        validateConnections();
-//    }
-
-//    private Digester createDigester(Properties vars) {
-//        Digester digester = createDigester();
-//
-//        if(vars != null) {
-//            MultiVariableExpander expander = new MultiVariableExpander();
-//            expander.addSource("$", vars);
-//            digester.setSubstitutor(new VariableSubstitutor(expander));
-//        }
-//
-//        return digester;
-//    }
-
     void validateConnections() throws ConfigurationException {
         // Call the validation method of the configuration
         for(Iterator it = _connections.iterator(); it.hasNext();) {
@@ -164,59 +141,6 @@ public class VJdbcConfiguration {
             connectionConfiguration.validate();
         }
     }
-
-//    private Digester createDigester() {
-//        Digester digester = new Digester();
-//
-//        digester.push(this);
-//
-//        digester.addObjectCreate("relayjdbc-configuration/occt", DigesterOcctConfiguration.class);
-//        digester.addSetProperties("relayjdbc-configuration/occt");
-//        digester.addSetNext("relayjdbc-configuration/occt",
-//                "setOcctConfiguration",
-//                OcctConfiguration.class.getName());
-//
-//        digester.addObjectCreate("relayjdbc-configuration/rmi", DigesterRmiConfiguration.class);
-//        digester.addSetProperties("relayjdbc-configuration/rmi");
-//        digester.addSetNext("relayjdbc-configuration/rmi",
-//                "setRmiConfiguration",
-//                RmiConfiguration.class.getName());
-//
-//        digester.addObjectCreate("relayjdbc-configuration/connection", DigesterConnectionConfiguration.class);
-//        digester.addSetProperties("relayjdbc-configuration/connection");
-//        digester.addSetNext("relayjdbc-configuration/connection",
-//                "addConnection",
-//                ConnectionConfiguration.class.getName());
-//
-//        digester.addObjectCreate("relayjdbc-configuration/connection/connection-pool", ConnectionPoolConfiguration.class);
-//        digester.addSetProperties("relayjdbc-configuration/connection/connection-pool");
-//        digester.addSetNext("relayjdbc-configuration/connection/connection-pool",
-//                "setConnectionPoolConfiguration",
-//                ConnectionPoolConfiguration.class.getName());
-//
-//        // Named-Queries
-//        digester.addObjectCreate("relayjdbc-configuration/connection/named-queries", NamedQueryConfiguration.class);
-//        digester.addCallMethod("relayjdbc-configuration/connection/named-queries/entry", "addEntry", 2);
-//        digester.addCallParam("relayjdbc-configuration/connection/named-queries/entry", 0, "id");
-//        digester.addCallParam("relayjdbc-configuration/connection/named-queries/entry", 1);
-//        digester.addSetNext("relayjdbc-configuration/connection/named-queries",
-//                "setNamedQueries",
-//                NamedQueryConfiguration.class.getName());
-//
-//        // Query-Filters
-//        digester.addObjectCreate("relayjdbc-configuration/connection/query-filters", QueryFilterConfiguration.class);
-//        digester.addCallMethod("relayjdbc-configuration/connection/query-filters/deny", "addDenyEntry", 2);
-//        digester.addCallParam("relayjdbc-configuration/connection/query-filters/deny", 0);
-//        digester.addCallParam("relayjdbc-configuration/connection/query-filters/deny", 1, "type");
-//        digester.addCallMethod("relayjdbc-configuration/connection/query-filters/allow", "addAllowEntry", 2);
-//        digester.addCallParam("relayjdbc-configuration/connection/query-filters/allow", 0);
-//        digester.addCallParam("relayjdbc-configuration/connection/query-filters/allow", 1, "type");
-//        digester.addSetNext("relayjdbc-configuration/connection/query-filters",
-//                "setQueryFilters",
-//                QueryFilterConfiguration.class.getName());
-//
-//        return digester;
-//    }
 
     void log() {
         if(_rmiConfiguration != null) {

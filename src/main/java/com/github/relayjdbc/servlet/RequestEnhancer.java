@@ -9,13 +9,13 @@ package com.github.relayjdbc.servlet;
 public interface RequestEnhancer {
     /**
      * Called before the initial connect request of VJDBC is sent.
-     * @param requestModifier
+     * @param requestModifier the RequestModifier to add
      */
     void enhanceConnectRequest(RequestModifier requestModifier);
     
     /**
      * Called before each processing request of VJDBC.
-     * @param requestModifier
+     * @param requestModifier the RequestModifier to add
      */
     void enhanceProcessRequest(RequestModifier requestModifier);
 }

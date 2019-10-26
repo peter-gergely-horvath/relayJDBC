@@ -247,8 +247,8 @@ public class CommandProcessor {
 
     /**
      * release all connections established by given user, except the given one.
-     * @param connectionEntry
-     * @param userName
+     * @param connectionEntry the connection to release
+     * @param userName the user name
      * @return number of released connections
      */
     public int releaseUserConnections(ConnectionContext connectionEntry, String userName)  {
