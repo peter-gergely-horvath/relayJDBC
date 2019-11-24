@@ -120,6 +120,13 @@ BASE64PIPE transport starts a listener, that awaits incoming messages from the s
 and responds to the standard output. All protocol messages are Base64 encoded, allowing
 this transport to be used through text-only piping mechanisms. 
 
+***
+CAUTION: this transport is *NOT* an SSH tunnel! Unlike an SSH tunnel, this transport 
+works solely via transmitting connection payload data through the established 
+SSH session and does not open a forwarded port. The remote server is started as 
+a sub-process of the remote SSH shell session.
+***
+
 While theoretically, a number of client transports could use this connection type,
 in practice, only the `sshpipe` client connection type is used: that is, the 
 Relay JDBC driver establishes a SSH connection to a remote system, starts 
@@ -152,7 +159,7 @@ Where the placeholders are:
     * `host name`: the host to connect to (required)  
     * `port number`: the port to connect to (required)
     
- Sample URL: `jdbc:relayjdbc:http://localhost:2222`
+ Sample URL: `jdbc:relayjdbc:sshpipe://localhost:2222`
 
 ##### Mandatory properties to be passed 
 
