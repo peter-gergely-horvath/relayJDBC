@@ -7,7 +7,7 @@
 
     <groupId>com.github.peter-gergely-horvath</groupId>
     <artifactId>relay-jdbc</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
 
     <licenses>
         <license>
@@ -304,7 +304,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
-                        <version>3.2.1</version>
+                        <version>3.2.2</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -312,15 +312,70 @@
                                     <goal>shade</goal>
                                 </goals>
                                 <configuration>
+                                    <artifactSet>
+                                        <includes>
+                                            <include>*:*</include>
+                                        </includes>
+                                        <excludes>
+                                            <exclude>xml-apis:xml-apis</exclude>
+                                        </excludes>
+                                    </artifactSet>
+                                    <filters>
+                                        <filter>
+                                            <artifact>*:*</artifact>
+                                            <excludes>
+                                                <exclude>META-INF/*.SF</exclude>
+                                                <exclude>META-INF/*.DSA</exclude>
+                                                <exclude>META-INF/*.RSA</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                    <relocations combine.children="append">
+                                        <relocation>
+                                            <pattern>com.esotericsoftware</pattern>
+                                            <shadedPattern>
+                                                com.github.relayjdbc.shaded.com.esotericsoftware
+                                            </shadedPattern>
+                                            <includes>
+                                                <include>com.esotericsoftware.**</include>
+                                            </includes>
+                                        </relocation>
+                                        <relocation>
+                                            <pattern>com.jcraft</pattern>
+                                            <shadedPattern>
+                                                com.github.relayjdbc.shaded.com.jcraft
+                                            </shadedPattern>
+                                            <includes>
+                                                <include>com.jcraft.**</include>
+                                            </includes>
+                                        </relocation>
+                                        <relocation>
+                                            <pattern>javax.servlet</pattern>
+                                            <shadedPattern>
+                                                com.github.relayjdbc.shaded.javax.servlet
+                                            </shadedPattern>
+                                            <includes>
+                                                <include>javax.servlet.**</include>
+                                            </includes>
+                                        </relocation>
+                                        <relocation>
+                                            <pattern>org</pattern>
+                                            <shadedPattern>
+                                                com.github.relayjdbc.shaded.org
+                                            </shadedPattern>
+                                            <includes>
+                                                <include>org.**</include>
+                                            </includes>
+                                        </relocation>
+                                    </relocations>
                                     <transformers>
                                         <transformer
-                                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                            <mainClass>com.github.relayjdbc.server.Main</mainClass>
-                                        </transformer>
+                                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 
-                                        <transformer
-                                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
-                                        </transformer>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <mainClass>com.github.relayjdbc.server.Main</mainClass>
+                                    </transformer>
                                     </transformers>
                                 </configuration>
                             </execution>
@@ -425,29 +480,29 @@
     </profiles>
 
     <build>
-    <resources>
-        <resource>
-            <directory>src/main/resources</directory>
-            <filtering>true</filtering>
-            <includes>
-                <include>**/*.prop</include>
-            </includes>
-        </resource>
-        <resource>
-            <directory>src/main/resources</directory>
-            <filtering>false</filtering>
-            <includes>
-                <include>META-INF/services/java.sql.Driver</include>
-            </includes>
-        </resource>
-        <resource>
-            <directory>src/test/resources</directory>
-            <filtering>true</filtering>
-            <excludes>
-                <exclude>**/*.prop</exclude>
-            </excludes>
-        </resource>
-    </resources>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.prop</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>META-INF/services/java.sql.Driver</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.prop</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
 
 
