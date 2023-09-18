@@ -1,5 +1,10 @@
 # Relay JDBC - Access JDBC data sources through an intermediate proxy server
 
+| :warning: ATTENTION                                                                                                             |
+|:--------------------------------------------------------------------------------------------------------------------------------|
+| This project is no longer developed or maintained.  It remains available, but no new features or bug fixes will be implemented! |
+
+
 ## Overview
 
 Relay JDBC is a custom JDBC driver implementation that allows a target 
